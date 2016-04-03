@@ -1,0 +1,72 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}话题详情{% endblock %}
+
+{% block otherstyle %}
+<style type="text/css">
+	.question_title {
+		font-weight: bold;
+		color: #0E2D5F;
+		font-size:14px;
+		height: 60px;
+		text-align: center;
+	}
+</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/contact/topic_detail.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- administrator access -->
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " style="margin-bottom:20px;"
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+<table id="dg"  title="话题详情" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'topic_title',width:330" formatter="topicTitleFormatter">话题标题</th>
+			<th data-options="field:'topic_starttime',width:130" formatter="topicStarttimeFormatter">发贴时间</th>
+			<th data-options="field:'topic_replynums',width:120"  formatter="">回复</th>
+			<th data-options="field:'topic_viewnums',width:120"  formatter="topicViewtimesFormatter">查看</th>
+			<th data-options="field:'topic_lastreply',width:130"  formatter="">最后回复</th>
+			<th data-options="field:'operation',width:120"  formatter="topicOperationFormatter">操作</th>
+			<th data-options="field:'view_replys',width:120"  formatter="viewReplysFormatter">查看回复</th>
+		</tr>
+		</tr>
+	</thead>
+</table>
+
+<div id="topicReplyDlg" class="easyui-dialog" title="话题回复" 
+  		style="width:750px;height:438px;overflow: hidden;" 
+  		data-options="modal:true,closed:true">
+
+  		<table id="replyDg" style="left:0;height:400px;position:relative;" 
+			data-options="
+			border:false,
+			iconCls: 'icon-group',
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			">
+			<thead>
+				<tr>
+					<th data-options="field:'reply_content',width:390" formatter="replyContentFormatter">回复内容</th>
+					<th data-options="field:'reply_time',width:128" formatter="replyTimeFormatter">回复时间</th>
+					<th data-options="field:'reply_status',width:120"  formatter="replyStatusFormatter">状态</th>
+					<th data-options="field:'shield',width:90"  formatter="replyShieldFormatter">屏蔽</th>
+				</tr>
+				</tr>
+			</thead>
+		</table>
+</div>
+{% endblock %}

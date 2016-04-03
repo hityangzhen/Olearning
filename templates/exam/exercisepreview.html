@@ -1,0 +1,92 @@
+{% extends "exam/static_exercisepaper.html" %}
+
+{% block title %}试卷预览{% endblock %}
+
+{% block exercisepaper_status %}
+{% endblock %}
+
+{% block exercisepaper_result %}
+{% endblock %}
+
+
+{% block exerciseextras %}
+{% load exam_extras %}
+<script type="text/javascript">
+	$(function(){
+
+		var answer_div='<div class="exercise_answer">\
+			<p>\
+		        <span class="label label-warning">参考答案 :</span>\
+		        <span class="answer_span"></span>\
+		    </p>\
+		    <p>\
+		        <span class="label label-warning">题目解析 :</span>\
+		       	<span class="resolution_span"></span>\
+		    </p>\
+		</div>';
+
+		var exercise;
+		var j=0;
+		var answer;
+
+		// for judge
+		{% if exercises|exercisesByType:1|length %}
+			exercise=$('#judge .well .exercise');
+
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=answer_div;
+				$(exercise[i]).html(content);
+			}
+		
+			{% for exercise in exercises|exercisesByType:1 %}
+				answer=$(exercise[j]).find('.exercise_answer')[0];
+				$($(answer).find('.answer_span')[0]).html('{{ exercise.exercise_correctitem }}');
+				$($(answer).find('.resolution_span')[0]).html('{{ exercise.exercise_resolution }}');
+				j++;
+			{% endfor %}
+		{% endif %}
+
+		// for single
+		{% if exercises|exercisesByType:2|length %}
+			j=0;
+			exercise=$('#single .well .exercise');
+
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=answer_div;
+				$(exercise[i]).html(content);
+			}
+		
+			{% for exercise in exercises|exercisesByType:2 %}
+				answer=$(exercise[j]).find('.exercise_answer')[0];
+				$($(answer).find('.answer_span')[0]).html('{{ exercise.exercise_correctitem }}');
+				$($(answer).find('.resolution_span')[0]).html('{{ exercise.exercise_resolution }}');
+				j++;
+			{% endfor %}
+		{% endif %}
+
+		// for statement
+		{% if exercises|exercisesByType:3|length %}
+			j=0;
+			exercise=$('#statement .well .exercise');
+
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=answer_div;
+				$(exercise[i]).html(content);
+			}
+		
+			{% for exercise in exercises|exercisesByType:3 %}
+				answer=$(exercise[j]).find('.exercise_answer')[0];
+				$($(answer).find('.resolution_span')[0]).html('{{ exercise.exercise_resolution }}');
+				j++;
+			{% endfor %}
+		{% endif %}
+
+	});
+</script>
+{% endblock %}
+
+{% block bottom_operation %}
+{% endblock %}

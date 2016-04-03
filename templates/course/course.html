@@ -1,0 +1,39 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程信息管理{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/course/course.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<table id="dg" class="easyui-datagrid" title="课程信息列表" style="left:0;height:450px;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			url:'/course/list',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'fields',width:240" formatter="courseNameFormatter">课程名称</th>
+			<th data-options="field:'course_tags',width:140" formatter="courseTagsFormatter">课程标签</th>
+			<th data-options="field:'teacher',width:140"  formatter="teacherNameFormatter">课程教师</th>
+			<th data-options="field:'course_credit',width:100" formatter="courseCreditFormatter">课程学分</th>
+			<th data-options="field:'coursetype',width:100" formatter="courseTypeNameFormatter">课程类型</th>
+			<th data-options="field:'course_status',width:100" formatter="courseStatusFormatter">课程状态</th>
+			<th data-options="field:'course_detail',width:100" formatter="courseDetailFormatter">课程详情</th>
+			<th data-options="field:'course_notice',width:100" formatter="courseNoticeFormatter">课程公告</th>
+		</tr>
+	</thead>
+</table>
+
+{% endblock %}

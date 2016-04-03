@@ -1,0 +1,153 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}任务信息管理{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+		.validatebox-style {
+			width:250px;border:1px solid #8db2e3;
+		}
+		.textarea-style {
+			width:360px;border:1px solid #8db2e3;
+			height:80px;
+		}
+		#main {
+			width: 900px;
+			margin: 0 auto;
+			text-align: center;
+		}
+
+		#coursetypeDiv {
+			margin-bottom:30px;
+		}
+
+		#taskinfo{
+			border: 1px #8db2e3 solid;
+			background-color: #e0ecff;
+			height:150px;
+			margin-top: 20px;
+			font-size: 12px;
+			font-weight: bold;
+			color: #0E2D5F;
+		}
+
+		#taskinfo p{
+			text-align: left;
+			padding-left: 5px;
+		}
+		#taskinfo form {
+			padding-left: 50px;
+		}
+
+		#selectedCourses {
+			color:#0E2D5F;
+			font-size: 13px;
+			margin-top: -10px;
+		}
+
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/datagrid-bufferview.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/admin/task_add.js"></script>
+{% endblock %}
+
+{% block content %}
+{% load exam_extras %}
+{% load course_extras %}
+<div style="margin:2px 0;"></div>
+<div id="main">
+	<div id="coursetypeDiv">
+		课程类型选择：
+		<select id="coursetype" class="easyui-combobox validatebox-style" name="coursetype" >
+		</select>
+	</div>
+	{% if task %}
+	<p id="selectedCourses" >
+		<font color="red">已选课程:</font>
+		{{ task.task_courseids|courseNameSet:',' }}
+	</p>
+	{% endif %}
+	<table id="dg" class="" title="课程信息列表" style="height:320px;left:0" data-options="
+                view:bufferview,
+                rownumbers:true,
+                singleSelect:false,
+                autoRowHeight:false,
+                loadMsg:'数据装载中......',
+				toolbar:'#toolbar',
+                pageSize:50">
+        <thead>
+            <tr>
+            	<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+				<th data-options="field:'fields',width:200" formatter="courseNameFormatter">课程名称</th>
+				<th data-options="field:'course_tags',width:100" formatter="courseTagsFormatter">课程标签</th>
+				<th data-options="field:'teacher',width:100"  formatter="teacherNameFormatter">课程教师</th>
+				<th data-options="field:'course_credit',width:100" formatter="courseCreditFormatter">课程学分</th>
+				<th data-options="field:'course_learner',width:140"formatter="courseLearnerFormatter">课程对象</th>
+				<th data-options="field:'course_description',width:190" formatter="courseDescriptionFormatter">课程简介</th>
+            </tr>
+        </thead>
+    </table>
+
+    <!--工具栏-->
+	<div id="toolbar">
+		<a id="tool_add_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" 
+		iconCls="icon-add"plain="true" title="添加任务课程" onclick="addTaskCourse()">添加任务课程</a>
+	</div>
+
+   <div id="taskinfo">
+	<p>任务基本信息</p>
+	<form id="form1" method="post" action="">
+		{% csrf_token %}
+		<table>
+			<tr>
+				<td width="10%">任务名称：</td>
+				<td width="35%">
+					<input type="text" class="easyui-validatebox validatebox-style" id="task_name" 
+					name="task_name" data-options="required:true,missingMessage:'任务名称不能为空'" 
+					value="{{ task.task_name }}"/>
+				</td>
+			
+				<td width="10%">任务开始时间：</td>
+				<td width="35%">
+					<input type="text" class="easyui-datebox validatebox-style" 
+					id="task_starttime" name="task_starttime"  panelWidth="250"
+					data-options="required:true,missingMessage:'任务开始时间不能为空'" 
+					value="{{ task.task_starttime.date|timeformat:'/' }}" />
+				</td>
+			</tr>
+			<tr>
+				<td>任务结束时间：</td>
+				<td>
+					<input type="text" class="easyui-datebox validatebox-style" id="task_endtime" name="task_endtime" panelWidth="250" data-options="required:true,missingMessage:'任务结束时间不能为空'"
+					value="{{ task.task_endtime.date|timeformat:'/' }}"/>
+				</td>
+			
+				<td>任务状态：</td>
+				<td>
+					<select id="task_status" class="easyui-combobox validatebox-style" name="task_status" data-options="required:true,missingMessage:'此项不能为空'">
+						<option value="True">可用</option>
+						<option value="False">不可用</option>
+					</select>
+				</td>
+				<input type="hidden" id="task_courseids" name="task_courseids" value="{{ task.task_courseids }}"/>
+				<input type="hidden" id="coursetype_id" name="coursetype_id" />
+				<input type="hidden" id="publish" name="publish" value="0"/>
+			</tr>
+			<tr height="20px"></tr>
+		</table>
+		<span style="width:200px;margin-top:20px;margin-left:-50px;">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="taskEdit()">保存</a>
+			&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="taskPublish()">发布</a>
+			&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clear()">取消</a>
+		</span>
+	</form>
+	</div>
+
+
+
+</div>	
+{% endblock %}

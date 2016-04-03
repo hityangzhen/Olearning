@@ -1,0 +1,53 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程练习管理{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<table id="dg" class="easyui-datagrid" title="课程练习概况列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			url:'/exam/teacher_exercisepaper/{{request.session.user.id}}/generallist/',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'course_id',width:100" >课程编号</th>
+			<th data-options="field:'course_name',width:200" >课程名称</th>
+			<th data-options="field:'exercisepaper_general',width:400" >课程练习概况</th>
+			<th data-options="field:'exercisepaper_detail',width:160" formatter="exercisePaperDetailFormatter">
+			课程习题详情</th>
+		</tr>
+	</thead>
+</table>
+	<script type="text/javascript">
+
+		function exercisePaperDetailFormatter(value,row,index) {
+			return '<a style="color:blue" href="/exam/teacher_exercisepaper/'+row.course_id+'/">详情查看</a>';
+		}
+
+		$(function(){
+			$.extend($.messager.defaults,{  
+			    ok:"确定",  
+			    cancel:"取消"  
+			}); 
+			  
+			var dg=$('#dg');
+			defaultPagination(dg);
+		});
+
+	</script>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "text": "课程答疑",
+        "attributes":{ 
+			"url":"/contact/question/"
+		} 
+    },
+    {
+        "id": 2,
+        "text": "课程话题",
+        "attributes":{ 
+			"url":"/contact/topic/"
+		} 
+    }
+]

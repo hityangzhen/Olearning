@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "text": "课程类型管理",
+        "attributes":{ 
+			"url":"/admin/coursetype"
+		} 
+    }
+]

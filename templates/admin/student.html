@@ -1,0 +1,50 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}学员信息管理{% endblock %}
+
+{% block otherstyle %}
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/admin/student.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<table id="dg" title="学员信息列表" class="corner" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'student_username',width:120" formatter="studentUsernameFormatter">学员用户名</th>
+			<th data-options="field:'student_email',width:160" formatter="studentEmailFormatter">学员邮箱</th>
+			<th data-options="field:'student_tele',width:160"  formatter="studentTeleFormatter">学员联系方式</th>
+			<th data-options="field:'student_department',width:120" 
+			formatter="studentDepartmentFormatter">学员部门</th>
+			<th data-options="field:'student_gender',width:80" formatter="studentGenderFormatter">学员性别</th>
+			<th data-options="field:'student_status',width:100" formatter="studentStatusFormatter">学员状态</th>
+			<th data-options="field:'student_position',width:100" formatter="studentPositionFormatter">学员职位</th>
+			<th data-options="field:'student_ischecked',width:100" formatter="studentIscheckedFormatter">是否审核</th>
+			<th data-options="field:'student_detail',width:100" formatter="studentDetailFormatter">详细信息</th>
+		</tr>
+	</thead>
+</table>
+<!--工具栏-->
+<div id="toolbar" style="padding:5px;height:auto">
+	<a href="/admin/student/showadd/" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" 
+	plain="true" title="添加学员信息"></a>
+	<a id="tool_edit_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-edit"
+	plain="true" title="编辑学员信息" onclick="studentUpdate()"></a>
+	<a id="tool_delete_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-remove"
+	plain="true" title="删除学员信息" onclick="studentDelete()"></a>
+</div>
+
+{% endblock %}

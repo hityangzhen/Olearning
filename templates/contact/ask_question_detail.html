@@ -1,0 +1,242 @@
+{% extends "contact/ask_question.html" %}
+
+{% block title %}课程疑问详细信息{% endblock %}
+
+{% block childstyle %}
+	<style type="text/css">
+    .box-heading {
+      margin-top: 20px;
+      border-bottom: 1px solid #DDD;
+      margin-bottom: 15px;
+      zoom: 1;
+    }
+    .box-heading h2 {
+      margin: 0;
+      font-size: 18px;
+      display: inline-block;
+      border-bottom: 4px solid #5bb75b;
+      line-height: 28px;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-bottom: -1px;
+    }
+    .question-title {
+      background-color: #f8f8f8;
+      padding:  10px 5px 10px 5px;
+      height:40px;
+      border-bottom: 1px solid #DDD;
+      border-top: 1px solid #DDD;
+    }
+    .media img {
+      width:100px;
+      height:100px;
+    }
+    .media .pull-left {
+      margin-right: 40px ! important;
+    }
+
+    .pull-left p{
+      width: 100px;
+      margin-bottom: 0px;
+      text-align: center;
+      word-wrap:break-word;
+    }
+    .question-answer {
+      padding-top: 20px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #DDD;
+      margin-bottom: 40px;
+    }
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+  <script type="text/javascript">
+
+   function deleteQuestion(id) {
+    if(confirm('确定删除提问吗')){
+      window.location.href="/contact/ask_question/delete/"+id+"/";
+    }
+   }
+
+   function deleteAnswerQuestion(id) {
+     if(confirm('确定删除回答吗')){
+      window.location.href="/contact/ask_question/answer/delete/"+id+"/";
+    }
+   }
+
+  </script>
+{% endblock %}
+
+{% block status %}
+{% endblock %}
+
+{% block path %}
+  <ol class="breadcrumb">
+    <li><a href="/contact/ask_question/{{question.course.id}}/list/">答疑区首页</a></li>
+    <li class="active">{{question.question_title}}</li>
+  </ol>
+{% endblock %}
+
+{% block operation %}
+<div class="operation">
+
+    {% if request.session.user.usertype == 0 %}
+    {# only student can ask question #}
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#question">
+      <span class="glyphicon glyphicon-plus"></span> 我要提问</button>
+    {% endif %}
+
+    {% if request.session.user.usertype < 2 %}
+    {# administrator can only lookup #}
+      {% if request.session.user.usertype != 0 or request.session.user.id != question.student.id %}
+      {# student self can not answer the question #}
+      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#answer">
+        <span class="glyphicon glyphicon-share-alt"></span> 回答</button>
+      {% endif %}
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% load exam_extras %}
+{% load contact_extras %}
+
+
+{% block main %}
+<div class="box-heading">
+  <h2>标题</h2>
+</div>
+
+<!-- question info -->
+<div>
+  <p class="question-title">
+    <span style="float:left">{{question.question_title}}</span>
+    <span style="float:right">提问于:   {{question.question_starttime|fulltimeformat}}</span>
+  </p>
+
+  <div class="media">
+    <div class="pull-left" href="#">
+      <img class="media-object" src="{{ STATIC_URL }}image/anonymous_48.png" alt="...">
+      <p>{{ question.student.student_username }}</p>
+      <p>
+        {% ifequal question.student.id request.session.user.id %}
+          {% ifequal request.session.user.usertype 0 %}
+           <button type="button" class="btn btn-danger btn-xs" onclick="deleteQuestion({{question.id}})">
+            <span class="glyphicon glyphicon-remove"></span>删除提问</button>
+          {% endifequal %}
+        {% endifequal %}
+      </p>
+    </div>
+    <div class="media-body">
+      <p>{{ question.question_content|default:'<span style="color: #999">无补充内容<span>' }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- teacher's answers -->
+{% if answerQuestion|answerByType:1|length != 0 %}
+<div id="teacher_block">
+<div class="box-heading">
+  <h2>教师的回答</h2>
+</div>
+
+{% for aq in answerQuestion|answerByType:1 %}
+<div class="question-answer">
+  <div class="media">
+    <div class="pull-left" href="#">
+      <img class="media-object" src="{{STATIC_URL}}image/anonymous.jpg" alt="...">
+      <p>{{aq.answerquestion_userid|answername:aq.answerquestion_usertype}}</p>
+      <p>教师</p>
+      <p>回答于: {{aq.answerquestion_time|fulltimeformat}}</p>
+      <!-- teacher delete the answer -->
+      <p>
+        {% ifequal aq.answerquestion_userid request.session.user.id %}
+          {% ifequal request.session.user.usertype 1 %}
+           <button type="button" class="btn btn-danger btn-xs" onclick="deleteAnswerQuestion({{ aq.id }})">
+            <span class="glyphicon glyphicon-remove"></span>删除回答</button>
+          {% endifequal %}
+        {% endifequal %}
+      </p>
+    </div>
+    <div class="media-body">
+      <p>{{ aq.answerquestion_content|questionshield:aq|safe }}</p>
+    </div>
+  </div>
+</div><!-- end teacher_block -->
+{% endfor %}
+
+{% endif %}
+
+
+<!-- student's answers -->
+{% if answerQuestion|answerByType:0|length != 0 %}
+<div id="student_block">
+<div class="box-heading">
+  <h2>学员的回答</h2>
+</div>
+
+{% for aq in answerQuestion|answerByType:0 %}
+<div class="question-answer">
+  <div class="media">
+    <div class="pull-left" href="#">
+      <img class="media-object" src="{{STATIC_URL}}image/anonymous.jpg" alt="...">
+      <p>{{aq.answerquestion_userid|answername:aq.answerquestion_usertype}}</p>
+      <p>学员</p>
+      <p>回答于: {{aq.answerquestion_time|fulltimeformat}}</p>
+      <!-- student delete the answer -->
+      <p>
+        {% ifequal aq.answerquestion_userid request.session.user.id %}
+          {% ifequal request.session.user.usertype 0 %}
+           <button type="button" class="btn btn-danger btn-xs" onclick="deleteAnswerQuestion()">
+            <span class="glyphicon glyphicon-remove"></span>删除回答</button>
+          {% endifequal %}
+        {% endifequal %}
+      </p>
+    </div>
+    <div class="media-body">
+      <p >{{ aq.answerquestion_content|questionshield:aq|safe }}</p>
+    </div>
+  </div>
+</div><!-- end student block -->
+{% endfor %}
+{% endif %}
+
+<div style="float:right">
+<span  style="float: right;">记录总数 : <b> {{ answerQuestion|length }}</b> </span>
+</div>
+
+<!-- answer modal -->
+<div class="modal fade" id="answer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="">回答提问</h4>
+      </div>
+      <form id="form2" method="post" action="/contact/ask_question/{{question.id}}/answer/">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-2">
+              内容：
+            </div>
+            <div class="col-sm-10">
+              
+              <textarea rows="5" id="answerquestion_content" name="answerquestion_content" 
+              placeholder="输入回答内容"
+              class="form-control" required="required" oninvalid="setCustomValidity('必须填写！');"></textarea>
+        
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" >提 交</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        </div>
+       </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock %}

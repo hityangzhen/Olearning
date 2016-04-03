@@ -1,0 +1,180 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}教师信息编辑{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+		.validatebox-style {
+			width:300px;border:1px solid #8db2e3;
+			line-height: 16px;
+		}
+		.textarea-style {
+
+			width:360px;border:1px solid #8db2e3;
+			height:120px;
+			margin-left: 40px;
+		}
+
+		table {
+			margin-top: 0px;
+		}
+		table tr {
+			height:30px;
+		}
+
+		.left-td {
+			font-size:14px;
+			font-weight: bold;
+			color: #0E2D5F;
+			text-align:right;
+			padding-right: 20px;
+		}
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script src="{{ STATIC_URL }}js/admin/teacher_edit.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="easyui-panel" data-options="border:false">
+	<div style="width:500px;height:100%;margin:0 auto">
+		<form id="form1" method="post" enctype="multipart/form-data" action="/admin/teacher/add/">
+			{% csrf_token %}
+			<table width="100%">
+				<tr>
+					<td class="left-td" width="20%">用户名：</td>
+					<td width="80%">
+						<input type="text" class="easyui-validatebox validatebox-style" data-options="required:true,missingMessage:'用户名不能为空'" id="teacher_username" name="teacher_username"
+						value="{{ teacher.teacher_username }}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >性别：</td>
+					<td >
+						<select class="easyui-combobox validatebox-style" data-options="required:true,missingMessage:'此项比选'" id="teacher_gender" name="teacher_gender">
+							<option value="True" >男</option>
+							<option value="False" >女</option>
+						</select>
+						{% if teacher.teacher_gender %}
+						<script type="text/javascript">
+							$(function(){
+								$('#teacher_gender').combobox('setValue','True');
+							});
+						</script>
+						{% else %}
+						<script type="text/javascript">
+							$(function(){
+								$('#teacher_gender').combobox('setValue','False');
+							});
+						</script>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >年龄：</td>
+					<td >
+						<input type="text" class="easyui-numberbox validatebox-style" data-options="required:true,missingMessage:'年龄不能为空'" id="teacher_age" name="teacher_age"
+						value="{{ teacher.teacher_age }}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >头像：</td>
+					<td >
+						<input class="validatebox-style easyui-tooltip" type="file" id="teacher_head_portrait" name="teacher_head_portrait" 
+						{% if teacher.teacher_head_portrait %}
+						title="已有头像，可以点击替换"
+						{% else %}
+						title="暂无头像，可以点击选择"
+						{% endif %}
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >身份证：</td>
+					<td >
+						<input class="validatebox-style easyui-validatebox" type="text" id="teacher_identity" name="teacher_identity" data-options="required:true,missingMessage:'身份证不能为空'" 
+						value="{{ teacher.teacher_identity }}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >真实姓名：</td>
+					<td >
+						<input class="validatebox-style easyui-validatebox" type="text" id="teacher_realname" name="teacher_realname" data-options="required:true,missingMessage:'真实姓名不能为空'" 
+						value="{{ teacher.teacher_realname }}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >密码：</td>
+					<td >
+						<input class="validatebox-style easyui-validatebox easyui-tooltip" type="password" id="teacher_userpwd"  name="teacher_userpwd" title="不填密码为身份证后6位" 
+						value="{{ teacher.teacher_userpwd}}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >邮箱：</td>
+					<td >
+						<input type="text" class="easyui-validatebox validatebox-style" data-options="required:true,missingMessage:'邮箱不能为空'" id="teacher_email" name="teacher_email"
+						value="{{ teacher.teacher_email }}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >联系方式：</td>
+					<td >
+						<input type="text" class="easyui-validatebox validatebox-style" data-options="required:true,missingMessage:'联系方式不能为空'" id="teacher_tele" name="teacher_tele"
+						value="{{ teacher.teacher_tele }}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >部门：</td>
+					<td >
+						<input type="text" class="easyui-validatebox validatebox-style" data-options="required:true,missingMessage:'部门不能为空'" id="teacher_department" name="teacher_department"
+						value="{{ teacher.teacher_department }}"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >状态：</td>
+					<td >
+						<select class="easyui-combobox validatebox-style" data-options="required:true,missingMessage:'此项比选'" id="teacher_status" name="teacher_status">
+							<option value="True" >可用</option>
+							<option value="False">不可用</option>
+						</select>
+						{% if teacher.teacher_status %}
+						<script type="text/javascript">
+							$(function(){
+								$('#teacher_status').combobox('setValue','True');
+							});
+						</script>
+						{% else %}
+						<script type="text/javascript">
+							$(function(){
+								$('#teacher_status').combobox('setValue','False');
+							});
+						</script>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td class="left-td" >
+						备注：
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<textarea class="easyui-validatebox textarea-style" type="text" id="teacher_remark" name="teacher_remark" >{{ teacher.teacher_remark }}</textarea>
+					</td>
+				</tr>
+				<tr >
+					<td colspan="2" >
+						<span style="width:200px;margin-left:150px;font-weight:bolder;">
+							<a href="javascript:void(0)"  class="easyui-linkbutton" onclick="" id="submit">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#form1').form('clear')">取消</a>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+{% endblock %}

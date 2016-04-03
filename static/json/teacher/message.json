@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "text": "练习提醒",
+        "attributes":{ 
+			"url":""
+		} 
+    },
+    {
+        "id": 2,
+        "text": "讨论提醒",
+        "attributes":{ 
+            "url":"/admin/message/?type=5"
+        } 
+    },
+    {
+        "id": 3,
+        "text": "系统提醒",
+        "attributes":{ 
+            "url":""
+        } 
+    }
+]

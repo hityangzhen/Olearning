@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "text": "任务提醒",
+        "attributes":{ 
+			"url":""
+		} 
+    },
+    {
+        "id": 2,
+        "text": "练习提醒",
+        "attributes":{ 
+			"url":"/admin/message/?type=4"
+		} 
+    },
+    {
+        "id": 3,
+        "text": "讨论提醒",
+        "attributes":{ 
+            "url":"/admin/message/?type=5"
+        } 
+    },
+    {
+        "id": 4,
+        "text": "课程提醒",
+        "attributes":{ 
+            "url":"/admin/message/?type=3"
+        } 
+    },
+    {
+        "id": 5,
+        "text": "系统提醒",
+        "attributes":{ 
+            "url":""
+        } 
+    }
+]

@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "text": "课程信息添加",
+        "attributes":{ 
+            "url":"/course/add"
+        } 
+    },
+    {
+        "id": 2,
+        "text": "教师课程管理",
+        "attributes":{ 
+            "url":"/course/teacher/"
+        } 
+    }
+]

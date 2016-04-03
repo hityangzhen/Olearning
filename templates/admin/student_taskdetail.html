@@ -1,0 +1,40 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}学员任务详细信息{% endblock %}
+
+{% block otherstyle %}
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/admin/student_taskdetail.js"></script>
+{% endblock %}
+
+{% block content %}
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " 
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+<div style="height:10px;"></div>
+<table id="dg"  title="学员任务详细信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'course_name',width:200" formatter="courseNameFormatter">课程名称</th>
+			<th data-options="field:'learn_progress',width:180" formatter="learnProgressFormatter">学习进度</th>
+			<th data-options="field:'learn_timesum',width:100"  formatter="learnTimeSumFormatter">学习总时间</th>
+			<th data-options="field:'course_ispassed',width:100" formatter="courseIsPassed">课程状态</th>
+			<th data-options="field:'learn_credit',width:95" formatter="learnCredit">获得学分</th>
+			<th data-options="field:'learn_course',width:100" formatter="learnCourse">学习课程</th>
+			<th data-options="field:'resource_center',width:100" formatter="resourceCenterFormatter">知识中心</th>
+			<th data-options="field:'course_exercisepaper',width:100" formatter="courseExercisepaper">课程练习</th>
+			<th data-options="field:'course_comment',width:100" formatter="courseCommentFormatter">课程评价</th>
+		</tr>
+	</thead>
+</table>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}提问中心{% endblock %}
+
+{% block otherstyle %}
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript">
+		function enterFormatter(value,row,index) {
+			return '<a target="_blank" href="/contact/ask_question/'+row.course_id+'/list/">进入课程答疑</a>';
+		}
+
+		function detailFormatter(value,row,index) {
+			{% if request.session.user.usertype == 2 %}
+			return '<a href="/contact/question/'+value+'/show_detail/">查看课程提问</a>';
+			{% endif %}
+		}
+		$(function(){
+			var dg=$('#dg');
+			dg.datagrid({
+				url:'/contact/question/list/',
+			});
+
+			defaultPagination(dg);
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<!-- administrator access -->
+<div style="height:10px;"></div>
+<table id="dg"  title="提问中心" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'course_name',width:300"  formatter="">课程名称</th>
+			<th data-options="field:'question_nums',width:150"  formatter="">提问数量</th>
+			<th data-options="field:'question_lastanswer',width:200"  formatter="">最后提问</th>
+			<th data-options="field:'course_id',width:200"  formatter="detailFormatter">详情查看</th>
+			<th data-options="field:'enter',width:200"  formatter="enterFormatter">课程答疑</th>
+		</tr>
+		</tr>
+	</thead>
+</table>
+{% endblock %}

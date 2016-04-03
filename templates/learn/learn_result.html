@@ -1,0 +1,35 @@
+{% extends "main/bootstrap.html" %}
+
+{% block title %}课程学习结果{% endblock %}
+
+{% block otherstyle %}
+<style type="text/css">
+	.alert-warning {
+        background-image:none;
+    }
+</style>
+{% endblock %}
+
+{% block otherscript %}
+{% endblock %}
+
+{% block content %}
+{% load learn_extras %}
+<div class="container">
+	<div class="alert alert-warning">
+		<strong>本次视频学习时长：</strong>{{ learnDetail.learn_timelength|timelength|default:0 }}
+	</div>
+	<p id="autodirect">5秒后自动关闭</p>
+</div>
+<script type="text/javascript">
+	$(function(){
+		// 
+		setTimeout(function(){
+	        window.opener=null;
+	        window.open('','_self');
+			window.close();
+	    },5000);
+	})
+	
+</script>
+{% endblock %}

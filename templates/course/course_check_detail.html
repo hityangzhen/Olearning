@@ -1,0 +1,120 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程详细信息审核{% endblock %}
+
+{% block otherstyle %}
+  <style type="text/css">
+    #back{
+      margin-left: 20px;
+      color: #0E2D5F;font-weight:bold;font-size:18px;
+    }
+    table tr td:nth-child(4) {
+      padding-left: 15px;
+    }
+    #course-tabinfo .easyui-tabs div p{
+      padding: 10px;
+      color: #0E2D5F;font-weight:bold;font-size:12px;
+    }
+    .easyui-tabs div p {
+      word-break:break-all; word-wrap:break-word ;
+    }
+    #checkreply {
+       color: #0E2D5F;font-weight:bold;font-size:14px;
+    }
+    #checkreply textarea {
+      border:1px solid #99aaff;
+    }
+    hr {
+      border:1px dashed #99aaff;
+      width:650px;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+  </style>
+{% endblock %}
+
+{% block otherscript %}
+  <script type="text/javascript" src="{{STATIC_URL}}js/course/course_check_detail.js"></script>  
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+  	<div class="easyui-layout" style="width:650px;height:220px;margin:0 auto">
+  		<div data-options="region:'north',split:false,border:false" style="padding-top:6px;height:40px;color: #0E2D5F;text-align:center">
+  			<b style="font-size:22px" id="course-name">{{ course.course_name }}</b>
+  		</div>
+
+  		<!-- course phtot -->
+  		<div data-options="region:'west',split:false,border:false" style="width:150px;padding:20px 10px 20px 10px">
+  			<img src="{{ course.course_icon.url }}" alt="..." style="width:120px;height:130px"/>
+  		</div>
+  		<!-- course detail -->
+  		<div data-options="region:'center',split:false,border:false" style="padding:10px">
+  			<table style="border:0;color: #0E2D5F;font-weight:bold;font-size:18px">
+  				<tr height="50px">
+  					<td width="15%">课程分类</td>
+  					<td width="60%">{{ course.coursetype.coursetype_name }}</td>
+  					<td width="12%" align="right">讲师</td>
+  					<td width="10%" >{{ course.teacher.teacher_realname }}</td>
+  				</tr>
+  				<tr  height="50px">
+  					<td>达标学时</td>
+  					<td>120分钟</td>
+  					<td align="right">学分</td>
+  					<td>{{ course.course_credit }}</td>
+  				</tr>
+  				<tr  height="50px">
+  					<td>总体评分</td>
+  					<td>(3分/1人评论)</td>
+  					<td align="right">当前人数</td>
+  					<td>36</td>
+  				</tr>
+  			</table>
+  		</div>  				
+  	</div>
+    <!-- tabs -->
+  	<div id="course-tabinfo" data-options="region:'south',split:false,border:false" style="width:650px;height:250px;margin:0 auto;margin-top:20px">
+  		<div class="easyui-tabs" data-options="border:false">
+  			<div title="课程简介" >
+          <p >
+  				  {{ course.course_description }}
+          </p>
+  			</div>
+  			<div title="课程大纲" >
+          <p>
+  				  {{ course.course_outline }}            
+          </p>
+  			</div>
+  			<div title="培训对象" >
+          <p>
+  				  {{ course.course_learner }}
+          </p>
+  			</div>
+  		</div>
+  	</div>
+
+    <hr />
+    {% load course_extras %}
+    <!-- check reply -->
+    <div id="checkreply" style="width:650px;height:120px;margin:0 auto">
+      审核意见：<br /><br />
+      <textarea class="easyui-validatebox" style="width:650px;height:100px;margin:0 auto;margin-bottom:20px" id="course_checkedReply" name="course_checkedReply" data-options="required:true,missingMessage:'审核意见不能为空'">{{ course.course_checkedReply|split:"##"|last }}</textarea>
+      <input type="hidden" id="course_id" name="course_id" value="{{ course.id }}">
+      <span style="width:200px;margin-left:220px;">
+        <a href="javascript:void(0)"  class="easyui-linkbutton" style="color:green" 
+        {% if course.course_checkedReply %}
+        onclick="check(2)"
+        {% else %}
+        onclick="check(1)"
+        {% endif %} >审核通过</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="javascript:void(0)" class="easyui-linkbutton" style="color:red" 
+        {% if course.course_checkedReply %}
+        onclick="check(2)"
+        {% else %}
+        onclick="check(0)"
+        {% endif %} 
+        >审核不通过</a>
+      </span>
+      <div style="height:60px"></div>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "text": "学员信息管理",
+        "attributes":{ 
+			"url":"/admin/student/"
+		} 
+    },
+    {
+        "id": 2,
+        "text": "教师信息管理",
+        "attributes":{ 
+			"url":"/admin/teacher/"
+		} 
+    },
+     {
+        "id": 3,
+        "text": "用户信息导入",
+        "attributes":{ 
+            "url":"/admin/userimport/"
+        } 
+    }
+]

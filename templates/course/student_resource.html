@@ -1,0 +1,112 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程资料中心{% endblock %}
+
+{% block otherstyle %}
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript">
+
+		var u=window.location.href;
+		var array=u.split('/');
+		var course_id=array[array.length-2];
+
+		function resourceNameFormatter(value,row,index) {
+		    return row.fields.resource_name;
+		}
+		function resourceTagsFormatter(value,row,index) {
+		    return row.fields.resource_tags;
+		}
+
+		function resourceViewTimesFormatter(value,row,index) {
+		    return row.fields.resource_viewtimes;
+		}
+		function resourceDownloadtimesFormatter(value,row,index) {
+		    return row.fields.resource_downloadtimes;
+		}
+
+		function resourceDownloadFormatter(value,row,index) {
+			if (row.fields.resource_candownload)
+				return '<a onclick="downloadTimeUpdate('+row.pk+')" target="_blank" href="/course/student/resource/'+row.pk+'/download/">资料下载</a>';
+			return ;
+		}
+
+		function resourcePreviewFormatter(value,row,index) {
+			var filename=row.fields.resource_path;
+			var suffix=',pdf,doc,docx,xls,xlsx,ppt,pptx,';
+			suffix += 'rar,zip,tar,cab,uue,jar,iso,z,7-zip,ace,lzh,arj,gzip,bz2,';
+
+			if(suffix.indexOf(','+filename.split('.')[1]+',')>=0) {
+				return '<span style="color:orange">暂不提供在线预览功能</span>';
+			}
+
+			return '<a onclick="viewTimesUpdate('+row.pk+')"  target="_blank" href="{{MEDIA_URL}}'+filename+'">资料预览</a>'	;
+		}
+
+
+		function downloadTimeUpdate(id) {
+			executeUpdate('downloadtime',id);
+		}
+
+		function viewTimesUpdate(id) {
+			executeUpdate('viewtime',id);
+		}
+
+		function executeUpdate(name,id) {
+			$.ajax({
+				type:'GET',
+				url:'/course/resource/viewordownload/',
+				data:{'type':name,'id':id},
+				dataType:'json',
+				success:function(data) {
+					$('#dg').datagrid('reload');
+				}
+			});
+		}
+
+		$(function(){
+			var dg=$('#dg');
+			dg.datagrid({
+				url:'/course/student/resource/'+course_id+'/list/',
+			});
+
+			defaultPagination(dg);
+		});
+
+	</script>
+{% endblock %}
+
+{% block content %}
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " 
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+<div style="height:10px;"></div>
+<table id="dg"  title="课程资料中心" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'resource_name',width:340" 
+					formatter="resourceNameFormatter">资源名称</th>
+			<th data-options="field:'resource_tags',width:150" 
+					formatter="resourceTagsFormatter">资源标签</th>
+			<th data-options="field:'resource_download',width:150" 
+			formatter="resourceDownloadFormatter">资料下载</th>
+			<th data-options="field:'resource_preview',width:150" 
+			formatter="resourcePreviewFormatter">资料预览</th>
+			<th data-options="field:'resource_viewtimes',width:130" 
+					formatter="resourceViewTimesFormatter">资源浏览次数</th>
+			<th data-options="field:'resource_downloadtimes',width:130" 
+			formatter="resourceDownloadtimesFormatter">资源下载次数</th>
+		</tr>
+	</thead>
+</table>
+{% endblock %}

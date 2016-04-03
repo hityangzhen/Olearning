@@ -1,0 +1,82 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}教师练习评阅信息列表{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript">
+
+		function exercisepaperNameFormatter(value,row,index) {
+			return row.fields.exercisepaper.fields.exercisepaper_name;
+		}
+
+		function studentNameFormatter(value,row,index) {
+			return row.fields.student.fields.student_username;
+		}
+
+		function examMarkingStatusFormatter(value,row,index) {
+			return '<span style="color:orange">'+(row.fields.exam_markingstatus?'已评阅':'未评阅' )+'</span>';
+		}
+
+		function examScoresFormatter(value,row,index) {
+			if(!row.fields.exam_markingstatus)
+				return ''
+			return row.fields.exam_scores;	
+		}
+
+		function examIspassedFormatter(value,row,index) {
+			if(!row.fields.exam_markingstatus)
+				return ''
+			return '<span style="color:blue">'+(row.fields.exam_ispassed?'通过':'未通过')+'</span>';		
+		}
+
+		function examVerifyFormatter(value,row,index) {
+			return '<a target="_blank" href="/exam/teacher_exam/verify/'+row.pk+'/">进入审阅</a>'
+		}
+
+		$(function(){
+			var dg=$('#dg');
+			dg.datagrid({
+				url:'/exam/teacher_exam/verify/list/',
+				onLoadSuccess:function(data){
+		            if(data.rows.length==0) {
+		                bottomCenter('<font style="color:red;font-size:13px;font-family:微软雅黑;">当前没有待审阅的练习</font>');
+		            }
+		        }
+			});
+
+			defaultPagination(dg);
+		})
+		
+	</script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+
+<table id="dg"  title="教师练习评阅信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'pk',width:100">练习编号</th>
+			<th data-options="field:'exercisepaper_name',width:300" 
+			formatter="exercisepaperNameFormatter">练习名称</th>
+			<th data-options="field:'student_name',width:120" formatter="studentNameFormatter">学员名称</th>
+			<th data-options="field:'exam_markingstatus',width:120" formatter="examMarkingStatusFormatter">评阅状态</th>
+			<th data-options="field:'exam_scores',width:120" formatter="examScoresFormatter">练习得分</th>
+			<th data-options="field:'exam_ispassed',width:120" formatter="examIspassedFormatter">是否通过</th>
+			<th data-options="field:'exam_verify',width:120" formatter="examVerifyFormatter">评阅练习</th>
+		</tr>
+	</thead>
+</table>
+{% endblock %}

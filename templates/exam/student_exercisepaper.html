@@ -1,0 +1,42 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程练习列表{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/exam/student_exercisepaper.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " style="margin-bottom:10px;"
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+<table id="dg" title="课程练习信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'exercisepaper_name',width:250" formatter="exercisepaperNameFormatter">试卷名称</th>
+			<th data-options="field:'exercise_exercisecount',width:80" formatter="exerciseExerciseCountFormatter">题目总数</th>
+			<th data-options="field:'exercise_examtimes',width:89" formatter="exerciseExamTimesFormatter">可参加次数</th>
+			<th data-options="field:'exercise_haveexamedtimes',width:89" 
+			formatter="exerciseHaveExamedItmesFormatter">已参加次数</th>
+			<th data-options="field:'exercisepaper_allscore',width:80" formatter="exercisepaperAllScoreFormatter">试卷总分</th>
+			<th data-options="field:'exercisepaper_passedscore',width:80" formatter="exercisepaperPassedscoreFormatter">通过分数</th>
+			<th data-options="field:'exercisepaper_lasttime',width:80" formatter="exercisepaperLasttimeFormatter">考试时长</th>
+			<th data-options="field:'exercise_starttime',width:100" formatter="exerciseStarttimeFormatter">考试开始时间</th>
+			<th data-options="field:'exercise_endtime',width:100" formatter="exerciseEndtimeFormatter">考试截止时间</th>
+			<th data-options="field:'exam',width:100" formatter="examFormatter">考试练习</th>
+		</tr>
+	</thead>
+</table>
+{% endblock %}

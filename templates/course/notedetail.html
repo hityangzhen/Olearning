@@ -1,0 +1,123 @@
+{% extends "main/bootstrap.html" %}
+
+{% block title %}课程笔记信息{% endblock %}
+
+{% block otherstyle %}
+<style type="text/css">
+.container {
+			width:780px;
+		}
+.row {
+	margin-bottom: 30px;
+}
+</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script src="{{STATIC_URL}}js/jquery.form.js"></script>
+{% endblock %}
+{% load exam_extras %}
+{% block content %}
+<div class="container">
+
+	<form method="post" id="form1" action="">
+	{% csrf_token %}
+	<div class="row">
+		<div class="col-sm-2">
+			标题：
+		</div>
+		<div class="col-sm-10">
+			<input type="text" id="coursenote_title" name="coursenote_title" placeholder="请输入标题"
+			value="{{ note.coursenote_title }}" class="form-control"  />
+		</div>
+	</div>
+	{% if note %}
+	<div class="row">
+		<div class="col-sm-2">
+			笔记浏览次数：
+		</div>
+		<div class="col-sm-4">
+			{{ note.coursenote_viewtimes }}
+		</div>
+	</div>
+	{% endif %}
+	<div class="row">
+		<div class="col-sm-2">
+			内容：
+		</div>
+		<div class="col-sm-10">
+			<textarea id="coursenote_content" placeholder="请输入内容" name="coursenote_content" class="form-control"  rows="6" >{{ note.coursenote_content }}</textarea>
+		</div>
+	</div>
+	<input type="hidden" id="coursenote_viewtimes" name="coursenote_viewtimes" 
+	value="{{ note.coursenote_viewtimes|default:0 }}"/>
+	{% if note %}
+	<div class="row">
+		<div class="col-sm-7">
+		</div>
+		<div class="col-sm-5">
+				<p style="float:right">最后更新时间：{{ note.coursenote_time|simpletimeformat:'-' }}</p>
+		</div>
+	</div>
+	{% endif %}
+	<input type="hidden" id="type" name="type" />
+	<div id="operation" class="row">
+		<div class="col-sm-7"></div>
+		<div class="col-sm-5">
+			<button type="button" class="btn btn-primary" style="float:right" onclick="noteEdit()"><span class="glyphicon glyphicon-floppy-saved"></span>&nbsp;&nbsp;&nbsp;保 存
+			</button>
+		</div>
+	</div>
+
+	</form>
+	<p style="color:red" id="status" name="status"></p>
+</div>
+
+<script type="text/javascript">
+	var url=window.location.href;
+	// mark update or add note
+	var flag=true;
+
+	{% if note %}
+	flag=false;
+	{% endif %}
+
+	$(function(){
+		// for readonly
+		if(url.indexOf('edit')==-1) {
+			$('#coursenote_content').attr('readonly','readonly');
+			$('#coursenote_title').attr('readonly','readonly');
+			$('#operation').css('display','none');
+		}
+	})
+
+	function noteEdit() {
+		var title=$('#coursenote_title').val();
+		var content=$('#coursenote_content').val();
+
+		if(title==null || title=='' || content==null || content=='') {
+			$("#status").html('请填写完整');
+			return ;
+		}
+		var u;
+		if(flag)
+			u='/course/note/save/{{note.id|default:0}}/?courseid='+url.split('?')[1].split('=')[1]+'&studentid={{request.session.user.id}}';
+		else
+			u='/course/note/save/{{note.id|default:0}}/';
+
+		$.ajax({
+                type: "POST",
+                url:u,
+                data:$('#form1').serialize(),
+                success: function(data) {
+                   $('#status').html(data.tip+'<br />2秒后自动跳转!');
+
+                   setTimeout(function(){
+                   	window.location.href="/course/note/?courseid="+url.split('?')[1].split('=')[1];
+                   },2000);
+                }
+        });
+	}
+
+</script>
+{% endblock %}

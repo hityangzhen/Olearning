@@ -1,0 +1,147 @@
+{% extends "main/bootstrap.html" %}
+
+{% block title %}课程话题区{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+	body {
+		padding-top: 0px;
+		font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+	}
+
+	.container {
+		width: 980px;
+	}
+
+	.navbar {
+		background-image: none;
+	}
+
+	.navbar-header img {
+		width:60px;
+		height:60px;
+	}
+	.navbar-brand {
+		margin-top: -60px;
+		margin-left: 60px ! important;
+		vertical-align: middle;
+		font-size: 26px;
+		color: #000 ! important;
+	}
+	.operation {
+
+	}
+	.operation button {
+		margin-right: 10px;
+		background-image: none;
+	}
+	.modal-dialog {
+		width:700px;
+		height:500px;
+	}
+	.modal-title {
+		color: #2d6ca2;
+	}
+	.row {
+		margin-bottom: 20px;
+	}
+	input:required:invalid{
+	   border-color: #953b39;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+		-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+	}
+	/* 有效 */
+	input:required:valid{
+	   none;
+	}
+
+	.alert-info {
+		background-image: none;
+		border: none;
+		padding: 10px;
+	}
+
+	</style>
+	{% block childstyle %}
+	{% endblock %}
+
+{% endblock %}
+
+{% block otherscript %}
+{% endblock %}
+
+
+{% block content %}
+<!-- head -->
+    <div class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+        	<img src="{{STATIC_URL}}image/topic.png" >
+          	<p class="navbar-brand" >课程话题区</p>
+        </div>
+      </div>
+    </div>
+
+<div class="container">
+    <!-- some status info -->
+    {% block status %}
+    {% endblock %}
+
+    {% block path %}
+    <ol class="breadcrumb">
+	  <li class="active">话题区首页</li>
+	</ol>
+    {% endblock %}
+
+	<!-- operation -->
+    {% block operation %}
+    {% endblock %}
+   
+
+    {% block main %}
+    {% endblock %}
+
+</div>
+
+<!-- topic Modal -->
+<div class="modal fade" id="topic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title" >添加话题</h3>
+      </div>
+      <form id="form1" method="post" action="/contact/launch_topic/add/">
+      	{% csrf_token %}
+	      <div class="modal-body">
+	      		<div class="alert alert-info" style="text-align:center">发起话题必须要填写标题</div>
+		      	<div class="row">
+					<div class="col-sm-2">
+						<span style="color:red">*</span>标 题：
+					</div>
+					<div class="col-sm-10">
+						<input type="text" id="topic_title" name="topic_title" placeholder="请输入标题"
+						class="form-control"  required="required" oninvalid="setCustomValidity('必须填写！');" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2">
+						<span style="color:transparent">*</span>内 容：
+					</div>
+					<div class="col-sm-10">
+						<textarea rows="5" id="topic_content" name="topic_content" 
+						class="form-control" ></textarea>
+					</div>
+				</div>
+				<input type="hidden" id="courseid" name="courseid" />
+	      </div>
+	      <div class="modal-footer">
+	        <button type="submit" class="btn btn-primary">提 交</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+	      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}

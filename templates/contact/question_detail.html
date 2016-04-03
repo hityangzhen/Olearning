@@ -1,0 +1,73 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}提问详情{% endblock %}
+
+{% block otherstyle %}
+<style type="text/css">
+	.question_title {
+		font-weight: bold;
+		color: #0E2D5F;
+		font-size:14px;
+		height: 60px;
+		text-align: center;
+	}
+</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/contact/question_detail.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- administrator access -->
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " style="margin-bottom:20px;"
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+<table id="dg"  title="提问详情" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'question_name',width:330" formatter="questionNameFormatter">提问标题</th>
+			<th data-options="field:'question_starttime',width:130" formatter="questionStarttimeFormatter">提问时间</th>
+			<th data-options="field:'question_answernums',width:120"  formatter="">回答</th>
+			<th data-options="field:'question_viewnums',width:120"  formatter="questionViewtimesFormatter">查看</th>
+			<th data-options="field:'question_lastanswer',width:130"  formatter="">最后回答</th>
+			<th data-options="field:'operation',width:120"  formatter="questionOperationFormatter">操作</th>
+			<th data-options="field:'view_answers',width:120"  formatter="viewAnswersFormatter">查看回答</th>
+		</tr>
+		</tr>
+	</thead>
+</table>
+
+<div id="questionAnswerDlg" class="easyui-dialog" title="提问回答" 
+  		style="width:750px;height:438px;overflow: hidden;" 
+  		data-options="modal:true,closed:true">
+
+  		<table id="answerDg" style="left:0;height:400px;position:relative;" 
+			data-options="
+			border:false,
+			iconCls: 'icon-group',
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			">
+			<thead>
+				<tr>
+					<th data-options="field:'answer_content',width:300" formatter="answerQuestionContentFormatter">回复内容</th>
+					<th data-options="field:'answer_time',width:128" formatter="answerQuestionTimeFormatter">回复时间</th>
+					<th data-options="field:'answer_status',width:120"  formatter="answerQuestionStatusFormatter">状态</th>
+					<th data-options="field:'shield',width:90"  formatter="answerQuestionShieldFormatter">屏蔽</th>
+					<th data-options="field:'delete',width:90"  formatter="answerQuestionDeleteFormatter">删除</th>
+				</tr>
+				</tr>
+			</thead>
+		</table>
+</div>
+{% endblock %}

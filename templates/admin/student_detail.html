@@ -1,0 +1,152 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}学员详细信息{% endblock %}
+
+{% block otherstyle %}
+	<!-- 最新 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+	<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+	<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/docs.css">
+
+	<style type="text/css">
+		.media a img {
+			height:150px;
+			width:150px;
+			margin-top: 5px;
+		}
+
+		.bootstrap-font {
+			font-family: '微软雅黑';
+			font-size: 15px;
+		}
+		.media img {
+			border-radius: 4px;
+			-webkit-box-shadow: 0px 0px 5px 2px rgba(100, 100, 100, .2);
+			box-shadow: 0px 0px 5px 2px rgba(100, 100, 100, .2);
+		}
+		.media-body span{
+			
+			color: #0E2D5F;
+		}
+		.media-body span+span {
+			
+			padding-left: 20px;
+		}
+		.media-body .cell {
+			line-height: 40px;
+		}
+		.page-header h4 {
+			color: #0E2D5F;
+		}
+		#remark{
+			color: #333;
+			font-size: 14px;
+		}
+		.page-header {
+			border-bottom: 2px solid rgba(100, 100, 100, .2);
+		}
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script src="{{STATIC_URL}}js/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="media">
+		  <a class="pull-left col-md-2" href="#">
+		  	{% if student.student_head_portrait %}
+		    <img class="media-object" src="{{ student.student_head_portrait.url }}" alt="">
+		    {% else %}
+		    <img class="media-object" src="{{STATIC_URL}}image/anonymous.jpg" alt="">
+		    {% endif %}
+		  </a>
+		  <div class="media-body col-md-9">
+		  	<!-- student username -->
+		  	<div class="row cell">
+		  		<div class="col-md-5">
+			  		<span class="bootstrap-font">姓名：</span>
+			  		<span class="bootstrap-font">{{ student.student_realname }}</span>
+			  	</div>
+			  	<div class="col-md-5">
+			  		<span class="bootstrap-font">邮箱：</span>
+			  		<span class="bootstrap-font">{{ student.student_email }}</span>
+			  	</div>
+		  	</div>
+		  	<div class="row cell">
+		  		<div class="col-md-5">
+			  		<span class="bootstrap-font">联系：</span>
+			  		<span class="bootstrap-font">{{ student.student_tele }}</span>
+			  	</div>
+			  	<div class="col-md-5">
+			  		<span class="bootstrap-font">部门：</span>
+			  		<span class="bootstrap-font">{{ student.student_department }}</span>
+			  	</div>
+		  	</div>
+		  	<div class="row cell">
+		  		<div class="col-md-5">
+			  		<span class="bootstrap-font">职位：</span>
+			  		<span class="bootstrap-font">{{ student.student_position }}</span>
+			  	</div>
+			  	<div class="col-md-5">
+			  		<span class="bootstrap-font">性别：</span>
+			  		<span class="bootstrap-font">
+			  			{% if student.student_gender %}
+			  			男
+			  			{% else %}
+			  			女
+			  			{% endif %}
+			  		</span>
+			  	</div>
+		  	</div>
+		  	<div class="row cell">
+		  		<div class="col-md-5">
+			  		<span class="bootstrap-font">年龄：</span>
+			  		<span class="bootstrap-font">{{ student.student_age }}</span>
+			  	</div>
+			  	<div class="col-md-5">
+			  		<span class="bootstrap-font">职位编号：</span>
+			  		<span class="bootstrap-font">{{ student.student_positionid }}</span>
+			  	</div>
+		  	</div>
+		  </div>
+		</div>
+	</div>
+	<div class="row" style="margin-top:20px">
+		<div class="media-body">
+			<div class="col-md-4">
+			  		<span class="bootstrap-font">身份证：</span>
+			  		<span class="bootstrap-font">{{ student.student_identity }}</span>
+			</div>
+			<div class="col-md-3">
+			  		<span class="bootstrap-font">状态：</span>
+			  		<span class="bootstrap-font" style="color:red">
+			  			{% if student.student_status %}
+			  			可用
+			  			{% else %}
+			  			不可用
+			  			{% endif %}
+			  		</span>
+			</div>
+			<div class="col-md-3">
+			  		<span class="bootstrap-font">是否审核：</span>
+			  		<span class="bootstrap-font"  style="color:red">
+			  			{% if student.student_ischecked %}
+			  			已审核
+			  			{% else %}
+			  			未审核
+			  			{% endif %}
+			  		</span>
+			</div>
+		</div>
+	</div>
+	<div class="page-header col-md-12">
+	    <h4  id="download">备注</h4>
+	</div>
+	<p id="remark">{{ student.student_remark }}</p>
+</div>
+{% endblock %}

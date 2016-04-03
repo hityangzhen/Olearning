@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "text": "课程习题管理",
+        "attributes":{ 
+            "url":"/exam/teacher_exercise/"
+        } 
+    },
+    {
+        "id": 2,
+        "text": "课程练习管理",
+        "attributes":{ 
+            "url":"/exam/teacher_exercisepaper/"
+        } 
+    },
+    {
+        "id": 3,
+        "text": "学员练习审阅",
+        "attributes":{ 
+            "url":"/exam/teacher_exam/show_verify/"
+        } 
+    }
+]

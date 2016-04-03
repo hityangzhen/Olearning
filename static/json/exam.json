@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "text": "习题类型管理",
+        "attributes":{ 
+            "url":"/exam/exercisetype/"
+        } 
+    },
+    {
+        "id": 2,
+        "text": "课程习题管理",
+        "attributes":{ 
+            "url":"/exam/teacher_exercise/"
+        } 
+    },
+    {
+        "id": 3,
+        "text": "课程练习管理",
+        "attributes":{ 
+            "url":"/exam/teacher_exercisepaper/"
+        } 
+    },
+    {
+        "id": 4,
+        "text": "学员练习信息",
+        "attributes":{ 
+            "url":"/exam/student/show_participated/"
+        } 
+    },
+    {
+        "id": 5,
+        "text": "练习审阅管理",
+        "attributes":{ 
+            "url":"/exam/teacher_exam/show_verify/"
+        } 
+    }
+]

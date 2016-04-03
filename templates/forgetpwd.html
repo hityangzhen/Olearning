@@ -1,0 +1,149 @@
+{% extends "main/bootstrap.html" %}
+
+{% block title %}找回密码{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+	body {
+		padding-top: 0px;
+		font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+	}
+
+	.container {
+		width:720px;
+	}
+
+	.navbar {
+		background-image: none;
+	}
+
+	.navbar-header img {
+		width:73px;
+		height:73px;
+	}
+	.navbar-brand {
+		margin-top: -60px;
+		margin-left: 60px ! important;
+		vertical-align: middle;
+		font-size: 26px;
+		color: #000 ! important;
+	}
+	.operation {
+
+	}
+	.operation button {
+		margin-right: 10px;
+		background-image: none;
+	}
+	.modal-dialog {
+		width:700px;
+		height:500px;
+	}
+	.modal-title {
+		color: #2d6ca2;
+	}
+	.row {
+		margin-bottom: 20px;
+	}
+	input:required:invalid{
+	   border-color: #953b39;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+		-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+	}
+	/* 有效 */
+	input:required:valid{
+	   none;
+	}
+
+	.alert-info {
+		background-image: none;
+		border: none;
+		padding: 10px;
+	}
+
+	.select-secure-icon {
+		
+		height: 73px;
+		width: 73px;
+		background: url({{STATIC_URL}}image/sprite_email_phone_icon2.png) no-repeat -95px -80px;
+		background-position: -382px -80px;
+	}
+	.input-group-addon {
+		padding-right: 50px;
+		height: 35px;
+		background-color: #fff;
+	}
+	</style>
+	{% block childstyle %}
+	{% endblock %}
+
+{% endblock %}
+
+{% block otherscript %}
+{% endblock %}
+
+
+{% block content %}
+<!-- head -->
+<div class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+        	<img class="select-secure-icon" />
+          	<p class="navbar-brand" >找回密码</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+	<form id="form1" action="/findpwd/get/" method="post">
+		{% csrf_token %}
+		<table align="center" style="margin-top:50px">
+			<tr>
+				<td colspan="2" align="center"><span style="color:red" id="status">{{result.tip}}</span></td>
+			</tr>
+			<tr height="20px"></tr>
+			<tr>
+				<td align="right" style="padding-right:30px"><font color="red">*</font>请输入用户名：</td>
+				<td width="350px">
+					<input class="form-control" type="text" id="username" name="username" 
+					required="required" oninvalid="setCustomValidity('必须填写！');" />
+				</td>
+			</tr>
+			<tr height="30px"></tr>
+			<tr>
+				<td align="right" style="padding-right:30px"><font color="red">*</font>请输入邮箱：</td>
+				<td >
+					<input class="form-control" type="email" id="email" name="email" 
+					required="required" oninvalid="setCustomValidity('必须填写！');"/>
+				</td>
+			</tr>
+			<tr height="30px"></tr>
+			<tr>
+				<td align="right" style="padding-right:30px"><font color="red">*</font>请选择用户类型：</td>
+				<td >
+					<div class="input-group">
+				      	<span class="input-group-addon">
+				        	<input name="usertype" type="radio" value="0" required="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学员
+				      	</span>
+				      	<span class="input-group-addon">
+				        	<input name="usertype" type="radio" value="1" required="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;教师
+				      	</span>
+				      	<span class="input-group-addon">
+				        	<input name="usertype" type="radio" value="2" required="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;管理员
+				      	</span>
+				    </div><!-- /input-group -->
+				</td>
+			</tr>
+			<tr height="30px"></tr>
+			<tr>
+				<td colspan="2">
+					<button style="width:100px;margin-left:230px" class="btn btn-info btn-block" type="submit" >提交</button>
+				</td>
+			</tr>
+		</table>	
+	</form>
+	</div>
+</div>
+
+{% endblock %}

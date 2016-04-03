@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "text": "学生个人信息查看",
+        "attributes":{ 
+            "url":"/admin/student/"
+        } 
+    },
+    {
+        "id": 2,
+        "text": "学生个人信息修改",
+        "attributes":{ 
+            "url":"/admin/student/showupdate/"
+        } 
+    },
+    {
+        "id": 3,
+        "text": "教师个人信息查看",
+        "attributes":{ 
+            "url":"/admin/teacher/"
+        } 
+    },
+    {
+        "id": 4,
+        "text": "教师个人信息修改",
+        "attributes":{ 
+            "url":"/admin/teacher/showupdate/"
+        } 
+    },
+    {
+        "id": 5,
+        "text": "管理员个人信息查看",
+        "attributes":{ 
+            "url":"/admin/administrator/"
+        } 
+    },
+    {
+        "id": 6,
+        "text": "管理员个人信息修改",
+        "attributes":{ 
+            "url":"/admin/administrator/showupdate/"
+        } 
+    }
+]

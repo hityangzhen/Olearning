@@ -1,0 +1,251 @@
+{% extends "main/bootstrap.html" %}
+
+{% block title %}课程评价{% endblock %}
+
+{% block otherstyle %}
+<style type="text/css">
+
+		body {
+			padding-top: 0px;
+		}
+		.navbar {
+			background-image: none;
+		}
+
+		.navbar-header img {
+			width:60px;
+			height:60px;
+		}
+		.navbar-brand {
+			margin-top: -60px;
+			margin-left: 60px ! important;
+			vertical-align: middle;
+			font-size: 26px;
+			color: #000 ! important;
+		}
+
+		.container {
+			width:880px;
+		}
+
+		.row_height {
+			margin-bottom: 20px;
+		}
+		.radio {
+			display: inline-block;
+			min-height: 0px;
+			padding-right: 30px;
+			margin-top: 0px;
+			margin-bottom: 10px;
+			vertical-align: baseline;
+		}
+
+		.level {
+			color: #878787;
+		}
+
+		.media {
+			border-bottom: 1px solid #e5e5e5;
+			margin-bottom: 20px;
+			margin-top: 20px;
+		}
+		.media img {
+			width:48px;
+			height:48px;
+		}
+		#del:hover {
+			background-color: #eee;
+		}
+</style>
+{% endblock %}
+
+{% block otherscript %}
+{% endblock %}
+
+{% block content %}
+{% load exam_extras %}
+{% load course_extras %}
+<!-- head -->
+<div class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+        	<img src="{{STATIC_URL}}image/topic.png" >
+          	<p class="navbar-brand" >课程评论区</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+	<p style="color:red;text-align:right;height:30px;" id="status" name="status"></p>
+	<form id="form1" method="post" >
+		{% csrf_token %}
+		<div class="row row_height">
+		    	<div class="col-sm-2">
+		    		你的评分：
+		    	</div>
+		    	<div class="col-sm-9">
+		    		<label class="radio">  
+					  <input type="radio" name="coursecomment_score" id="" value="1">  
+					  1
+					</label> 
+					<label class="radio">  
+					  <input type="radio" name="coursecomment_score" id="" value="2">  
+					  2
+					</label> 
+					<label class="radio">  
+					  <input type="radio" name="coursecomment_score" id="" value="3">  
+					  3
+					</label> 
+					<label class="radio">  
+					  <input type="radio" name="coursecomment_score" id="" value="4">  
+					  4
+					</label> 
+					<label class="radio">  
+					  <input type="radio" name="coursecomment_score" id="" value="5">  
+					  5
+					</label>  
+		    	</div>
+		    	<div class="col-sm-1" align="right" >
+		    		<a href="javascript:void(0)" title="删除此评论" onclick="commentDelete()">
+		    			<img id="del" src="{{STATIC_URL}}image/delete.png" />
+		    		</a>
+		    	</div>
+		</div>
+		<!-- comment content -->
+		<div class="row row_height">			
+			   	<div class="col-sm-2">
+			    	你的评论：
+			   	</div>
+			    <div class="col-sm-10">
+			    	<textarea class="form-control" rows="3" style="float: left" name="coursecomment_content" 
+			    	id="coursecomment_content" placeholder="不超过200字"></textarea>
+			    </div>
+		</div>
+
+		<input type="hidden" id="commentid" name="commentid" value="0"/>
+		<input type="hidden" id="coursecomment_userid" name="coursecomment_userid" 
+		value="{{request.session.user.id}}"/>
+		<input type="hidden" id="coursecomment_usertype" name="coursecomment_usertype" 
+		value="{{request.session.user.usertype}}"/>
+		<!-- comment operation -->
+		<div align="right" id="comment-operation">
+			<button onclick="commentSave()" class="btn btn-primary" name="save" id="save" type="button">
+				<span class="glyphicon glyphicon-floppy-saved"></span>&nbsp;&nbsp;&nbsp;&nbsp;保 存</button>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+			<button onclick="" class="btn" name="cancel" id="cancel" type="reset">
+				<span class="glyphicon glyphicon-floppy-remove"></span>&nbsp;&nbsp;&nbsp;&nbsp;取 消</button>
+		</div>
+	</form>
+
+	<div align="left" class="level">
+			总体评分：{{ comment_list|coursewholecomment }}
+	</div>
+		<!-- history comment -->
+		<div class="media">
+			<a class="pull-left" href="#">
+			    <img class="media-object" src="{{STATIC_URL}}image/anonymous_48.png" alt="...">
+			</a>
+			<div class="media-body">
+				<span class="level">demo1 评论于: 2014-04-17 15:50:02	</span>
+				<span class="level" style="float:right">5 分</span>
+				<p style="word-wrap:break-word; word-break:normal; ">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+			</div>
+		</div>
+
+		{% for comment in comment_list %}
+		{% if comment|iscommentted:request.session.user %}
+		<script type="text/javascript">
+
+		$("input[name=coursecomment_score][value={{comment.coursecomment_score}}]").attr("checked",true);
+		$("#coursecomment_content").val('{{comment.coursecomment_content}}');
+		
+		// set the comment id
+		$('#commentid').val('{{ comment.id }}');
+		</script>
+		{% endif %}
+		<div class="media">
+			<a class="pull-left" href="#">
+			    <img class="media-object" 
+			    src="{{STATIC_URL}}image/comment_{{comment.coursecomment_usertype}}.png" alt="...">
+			</a>
+			<div class="media-body">
+				<span class="level">
+					{{ comment.coursecomment_userid|commentusername:comment.coursecomment_usertype }} 
+					评论于: 
+					{{ comment.coursecomment_time|fulltimeformat }}	</span>
+				<span class="level" style="float:right">{{ comment.coursecomment_score }} 分</span>
+				<p style="word-wrap:break-word; word-break:normal; ">{{ comment.coursecomment_content }}</p>
+			</div>
+		</div>
+		{% endfor %}
+
+		<!-- all count -->
+		<span class="level" style="float: right;"> 记录总数:<b>	{{ comment_list|length }}</b>
+		</span>
+</div>
+<script type="text/javascript">
+var url=window.location.href;
+var array=url.split('/');
+function commentSave() {
+	var score=$('input:radio[name="coursecomment_score"]:checked').val();
+	if (score==null) {
+		$('#status').html('请选择评分');
+		return ;
+	}
+
+	var content=$('#coursecomment_content').val();
+	if (content==null || content=='') {
+		$('#status').html('请填写内容');
+		return ;
+	}
+	
+	executeSave(array[array.length-2]);
+}
+
+function commentDelete() {
+	if($('#commentid').val()=='0') {
+		$('#status').html('无任何评论');
+	}
+	if(confirm('确实要删除此评论吗')) {
+		executeDelete(array[array.length-2],$('#commentid').val());
+	}
+}
+
+function executeSave(courseid) {
+	$.ajax({
+        type:"POST",
+        url:"/course/comment/"+courseid+"/save/",
+        dataType:"json",
+        data:$('#form1').serialize(),
+        success:function(data){
+           	showStatus(data.tip);
+        },
+        error:function(XMLHttpRequest,txtStatus,errorThrown){
+        	showStatus('网络出错'+errorThrown);	 
+        }
+    });
+}
+
+function executeDelete(courseid,commentid) {
+	$.ajax({
+        type:"GET",
+        url:"/course/comment/"+courseid+"/delete/"+commentid+"/",
+        dataType:"json",
+        success:function(data){
+           	showStatus(data.tip);
+        },
+        error:function(XMLHttpRequest,txtStatus,errorThrown){
+        	showStatus('网络出错'+errorThrown);	 
+        }
+    });
+}
+
+function showStatus(tip) {
+	$('#status').html(tip);
+	setTimeout(function(){
+		$('#status').empty();
+		window.location.href=url;
+	},2000);
+}
+</script>
+{% endblock %}

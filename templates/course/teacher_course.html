@@ -1,0 +1,53 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程信息管理{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/course/teacher_course.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<table id="dg" class="easyui-datagrid" title="课程信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			url:'/course/teacher/list/{{request.session.user.id}}/',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'fields',width:160" formatter="courseNameFormatter">课程名称</th>
+			<th data-options="field:'course_tags',width:100,nowrap:false,fixed:true" formatter="courseTagsFormatter">课程标签</th>
+			<th data-options="field:'teacher',width:100"  formatter="teacherNameFormatter">课程教师</th>
+			<th data-options="field:'course_credit',width:80" formatter="courseCreditFormatter">课程学分</th>
+			<th data-options="field:'coursetype',width:100" formatter="courseTypeNameFormatter">课程类型</th>
+			<th data-options="field:'course_status',width:80" formatter="courseStatusFormatter">课程状态</th>
+			<th data-options="field:'course_ischecked',width:100" formatter="courseCheckedFormatter">是否审核</th>
+			<th data-options="field:'course_detail',width:100" formatter="courseDetailFormatter">课程详情</th>
+			<th data-options="field:'course_resource',width:100" formatter="resourceFormatter">课程资源</th>
+			<th data-options="field:'notice',width:100" formatter="noticeFormatter">课程公告管理</th>
+		</tr>
+	</thead>
+</table>
+
+<!--工具栏-->
+<div id="toolbar" style="padding:5px;height:auto">
+	<a href="/course/add" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" plain="true" title="添加课程">
+	</a>
+	<a id="tool_edit_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-edit"
+	plain="true" title="编辑课程" onclick="courseUpdate()"></a>
+	<a id="tool_delete_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-remove"
+	plain="true" title="删除课程" onclick="courseDelete()"></a>
+	<a id="tool_publish_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-ok"
+	plain="true" title="发布课程" onclick="coursePublish()"></a>
+</div>
+
+{% endblock %}

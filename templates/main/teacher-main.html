@@ -1,0 +1,41 @@
+{% extends "main/main-base.html" %}
+
+{% block title %}教师中心{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}{% endblock %}
+
+{% block content %}
+<div title="课程管理" style="padding: 10px">
+	<ul id="tree1" class="easyui-tree"
+		data-options="url:'{{STATIC_URL}}json/teacher/course.json',method:'get',lines:true,animate:true">
+	</ul>
+</div>
+<div title="练习管理" style="padding: 10px">
+	<ul id="tree2" class="easyui-tree"
+		data-options="url:'{{STATIC_URL}}json/teacher/exam.json',method:'get',lines:true,animate:true">
+	</ul>
+</div>
+<div title="课程讨论" style="padding: 10px">
+	<ul id="tree3" class="easyui-tree"
+		data-options="url:'{{STATIC_URL}}json/teacher/contact.json',method:'get',lines:true,animate:true">
+	</ul>
+</div>
+<div title="个人信息维护" style="padding: 10px">
+	<input id="individual" name="individual" type="hidden" value="{{ request.session.user.id }}"/>
+	<ul id="tree4" class="easyui-tree"
+		data-options="url:'{{STATIC_URL}}json/teacher/individual.json',method:'get',lines:true,animate:true">
+	</ul>
+</div>
+<div title="我的消息" style="padding: 10px">
+	<ul id="tree5" class="easyui-tree"
+		data-options="url:'{{STATIC_URL}}json/teacher/message.json',method:'get',lines:true,animate:true">
+	</ul>
+</div>
+<div title="帮助中心" style="padding: 10px">
+	<ul id="tree6" class="easyui-tree"
+		data-options="url:'{{STATIC_URL}}json/help.json',method:'get',lines:true,animate:true">
+	</ul>
+</div>
+{% endblock %}

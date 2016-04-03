@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "text": "系统消息管理",
+        "attributes":{ 
+			"url":"/admin/showsystem_message/"
+		} 
+    }
+]

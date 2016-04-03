@@ -1,0 +1,63 @@
+{% extends "main/bootstrap.html" %}
+
+{% block title %}课程笔记{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+{% endblock %}
+
+{% block content %}
+{% load exam_extras %}
+
+<button  id="noteAdd" type="button" class="btn btn-primary" style="float:left;margin-bottom:20px" ><span class="glyphicon glyphicon-plus"></span>添加笔记
+			</button>
+
+<table class="table table-hover table-condensed">
+	<thead>
+	    <tr>
+	        <th>标题</th>
+	        <th>最后更新时间</th>
+	        <th>访问次数</th>
+	        <th>操作</th>
+	    </tr>
+	</thead>
+	<tbody>
+
+		{% for note in note_list %}
+			<tr>
+				<td>{{ note.coursenote_title }}</td>
+				<td>{{ note.coursenote_time.date|simpletimeformat:'-' }}</td>
+				<td>{{ note.coursenote_viewtimes }}</td>
+				<td>
+					{% ifequal note.student.id request.session.user.id %}
+					<a name="noteEdit" href="/course/note/{{ note.id }}/edit/" >编辑</a>
+					{% else %}
+					<a href="/course/note/{{ note.id }}/" >查看</a>
+					{% endifequal %}
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<script type="text/javascript">
+	var url=window.location.href;
+	var courseid=(url.split('?')[1]).split('=')[1];
+
+	$(function(){
+		$('#noteAdd').click(function(){
+		window.location.href='/course/note/edit/?courseid='+courseid;
+		});
+
+		var array=$('a[name="noteEdit"]');
+		
+		for(var i=0;i<array.length;i++) {
+			var old=$(array[i]).attr('href');
+			$(array[i]).attr('href',old+'?courseid='+courseid);
+		}
+			
+
+	});
+</script>
+{% endblock %}

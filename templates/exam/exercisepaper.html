@@ -1,0 +1,56 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程练习管理{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/exam/exercisepaper.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " style="margin-bottom:20px;"
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+
+<table id="dg" title="课程练习信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'exercisepaper_name',width:250" formatter="exercisepaperNameFormatter">试卷名称</th>
+			<th data-options="field:'exercise_exercisecount',width:70" formatter="exerciseExerciseCountFormatter">题目总数</th>
+			<th data-options="field:'exercise_examtimes',width:70" formatter="exerciseExamTimesFormatter">可参加次数</th>
+			<th data-options="field:'exercisepaper_allscore',width:70" formatter="exercisepaperAllScoreFormatter">试卷总分</th>
+			<th data-options="field:'exercisepaper_passedscore',width:70" formatter="exercisepaperPassedscoreFormatter">通过分数</th>
+			<th data-options="field:'exercisepaper_lasttime',width:76" formatter="exercisepaperLasttimeFormatter">考试时长</th>
+			<th data-options="field:'exercise_starttime',width:100" formatter="exerciseStarttimeFormatter">考试开始时间</th>
+			<th data-options="field:'exercise_endtime',width:100" formatter="exerciseEndtimeFormatter">考试截止时间</th>
+			<th data-options="field:'exercise_status',width:80" formatter="exerciseStatusFormatter">试卷状态</th>
+			<th data-options="field:'exercise_ischecked',width:80" formatter="exerciseIscheckedFormatter">是否审核</th>
+			<th data-options="field:'exercise_preview',width:80" formatter="exercisePaperPreviewFormatter">预览</th>
+		</tr>
+	</thead>
+</table>
+
+<!--工具栏-->
+<div id="toolbar" style="padding:5px;height:auto">
+	<a id="tool_add_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" plain="true" title="添加练习">
+	</a>
+	<a id="tool_edit_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-edit"
+	plain="true" title="编辑练习" onclick="exercisePaperUpdate()"></a>
+	<a id="tool_delete_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-remove"
+	plain="true" title="删除练习" onclick="exercisePaperDelete()"></a>
+	<a href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-ok"
+	plain="true" title="发布练习" onclick="exercisePaperPublish()"></a>
+</div>
+
+{% endblock %}

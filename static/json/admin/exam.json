@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "text": "习题类型管理",
+        "attributes":{ 
+			"url":"/exam/exercisetype/"
+		} 
+    },
+    {
+        "id": 2,
+        "text": "练习审核管理",
+        "attributes":{ 
+            "url":"/exam/admin_exercisepaper/show_check/"
+        } 
+    }
+]

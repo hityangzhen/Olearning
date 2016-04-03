@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title></title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{STATIC_URL}}css/bootstrap.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/login.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body>
+    <!-- logo head -->
+    <div class="head">
+        <div class="head-main">
+          <img src="{{STATIC_URL}}image/logo.png">
+          <div class="about">
+            <a href="#">关于</a>
+          </div>
+        </div>
+    </div>
+    <!-- navbar -->
+    <div class="navbar" role="navigation">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">帮助</a></li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="#">设为首页</a>
+            </li>
+            <li><a href="#">加入收藏</a></li>
+          </ul>
+        </div><!-- /.nav-collapse -->
+      </div><!-- /.container -->
+    </div>
+    <!-- main -->
+    <div class="container">
+      <div class="row">
+        <!--left side-->
+        <div id="slideleft" class="col-md-8">
+          <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+              <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+              <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+              <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner img-div">
+              <div class="item active">
+                <img src="{{STATIC_URL}}image/slide01.jpg" alt="First slide">
+              </div>
+              <div class="item">
+                <img src="{{STATIC_URL}}image/slide02.jpg" alt="Second slide">
+              </div>
+              <div class="item">
+                <img src="{{STATIC_URL}}image/slide03.jpg" alt="Third slide">
+              </div>
+            </div>
+            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- right side -->
+        <div id="slideright" class="col-md-3">
+          <ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#studentlogin" data-toggle="tab">&nbsp;&nbsp;学员登录&nbsp;</a></li>
+            <li ><a id="teacherA" href="#teacherlogin" data-toggle="tab">&nbsp;教师登录&nbsp;&nbsp;</a></li>
+          </ul>
+          <div id="myTabContent" class="tab-content">
+            <!-- student login -->
+            <div class="tab-pane fade in active" id="studentlogin">
+              <form role="form" id="studentform" action="/login/" method="post">
+                {%csrf_token%}
+                <h4></h4>
+                <label>用户名：</label>
+                <input id="username" name="username" type="text" class="form-control " placeholder="请输入学员用户名"  autofocus value="">
+
+                <div id="student-username-tip">
+                {% ifequal form.usertype.value '0' %}
+                {{ form.username.errors }}
+                {{ form.errors.user }}
+                {% endifequal %}
+                </div>
+                <label>密码：</label>
+                <input id="userpwd" name="userpwd" type="password" class="form-control" placeholder="请输入学员密码" >
+                <input id="usertype" name="usertype" type="hidden" value="0"/>
+                <div id="student-userpass-tip">
+                {% ifequal form.usertype.value '0' %}
+                {{ form.userpwd.errors }}{{ form.errors.login }}
+                {% endifequal %}
+                </div>
+                <a href="/findpwd/" target="_blank" id="forgetpwd">忘记密码了?</a>
+                <button class="btn btn-info btn-block" type="submit" >登录</button>
+                <br />
+              </form>
+            </div>
+            <div class="tab-pane fade" id="teacherlogin">
+              <!-- teacher login -->
+              <form role="form" id="teacherform" action="/login/" method="post">
+                {%csrf_token%}
+                <h4></h4>
+                <label>用户名：</label>
+                <input  id="username" name="username" type="text" class="form-control " placeholder="请输入教师用户名" required autofocus>
+                <input id="usertype" name="usertype" type="hidden" value="1"/>
+                <div id="teacher-username-tip">
+                {% ifequal form.usertype.value '1' %}
+                {{ form.username.errors }}{{ form.errors.user }}
+                {% endifequal %}
+                </div>
+                <label>密码：</label>
+                <input  id="userpwd" name="userpwd" type="password" class="form-control" placeholder="请输入教师密码" required >
+                <div id="teacher-userpass-tip">
+                {% ifequal form.usertype.value '1' %}
+                {{ form.userpwd.errors }}{{ form.errors.login }}
+                {% endifequal %}
+                </div>
+                <a href="/findpwd/" target="_blank" id="forgetpwd">忘记密码了?</a>
+                <button class="btn btn-info btn-block" type="submit" >登 录</button>
+                <br />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <div class="container">
+      <div class="foot">
+      <a href="#" target="_blank">官方网站</a>
+      <a href="#">联系邮件</a> <strong><b>川ICP备1102461-7</b>&nbsp;&nbsp; </strong>
+      ©2005-2014  xxxxx.com  版权所有&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#myModal" id="adminlogin" data-toggle="modal" >管理员入口</a></div>
+    </div>
+
+    <!-- manager login modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">管理员登录</h4>
+          </div>
+          <div class="modal-body">
+            <form role="form" id="administratorform" action="/login/" method="post">
+              {%csrf_token%}
+              <label>用户名：</label>
+              <input  id="username" name="username" type="text" class="form-control " placeholder="请输入管理员用户名" required autofocus>
+              <input id="usertype" name="usertype" type="hidden" value="2"/>
+              <div id="administrator-username-tip">
+                {% ifequal form.usertype.value '2' %}
+                {{ form.username.errors }}{{ form.errors.user }}
+                {% endifequal %}
+                </div>
+              <label>密码：</label>
+              <input  id="userpwd" name="userpwd" type="password" class="form-control" placeholder="请输入管理员密码" required >
+              <div id="administrator-userpass-tip">
+                {% ifequal form.usertype.value '2' %}
+                {{ form.userpwd.errors }}{{ form.errors.login }}
+                {% endifequal %}
+              </div>
+              <button type="submit" class="btn btn-info btn-block" >登 录</button>
+            </form>
+          </div>
+          
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(function(){
+        $('.carousel').carousel();
+
+        {% ifequal form.usertype.value '1' %}
+          $('#teacherA').tab('show');
+        {% endifequal %}
+
+        {% ifequal form.usertype.value '2' %}
+         $('#myModal').modal('show');
+        {% endifequal %}
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,252 @@
+{% extends "learn/video_base.html" %}
+{% block title %}课程习题管理{% endblock %}
+
+{% block otherstyle %}
+
+<style type="text/css">
+
+		html {
+			background-color: #fff ! important;
+			background-image: none;
+		}
+		body {
+			padding-top: 90px;
+			color:#333;
+		}
+
+		#videoDiv {
+			margin-top: 50px;
+			-webkit-box-shadow: 0 38px 30px -18px rgba(0, 0, 0, 0.5);
+			-moz-box-shadow: 0 38px 30px -18px rgba(0, 0, 0, 0.5);
+			box-shadow: 0 38px 30px -18px rgba(0, 0, 0, 0.5);
+			width: 826px;
+			height: 400px;
+		}
+		video {
+
+			margin-top:0px ! important;
+			background-color: #fff ! important;
+		}
+		.acorn-player.access .acorn-controls {
+			margin-top: -10px;
+		}
+
+		.navbar-inverse {
+			background-color: #1d365d ! important;
+		}
+
+		.container {
+			font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+		}
+
+		.status-info {
+			width: 826px;
+			margin-left: -15;
+			margin-right: 0;
+			background-color: #fff;
+			border-width: 1px;
+			border-color: #ddd;
+			border-radius: 4px;
+			box-shadow: none;
+		}
+
+		.status-info span {
+			color: #333;
+			margin-right: 60px;
+			font-size: 18px;
+			color: #34789a;
+		}
+
+		.modal-dialog{
+			width:840px;
+			height:450px;
+		}
+
+		.modal-title ,h4 {
+			text-shadow:none;
+			color: #000;
+		}
+
+		.modal-body {
+			padding-bottom: 50px;
+		}
+
+		
+
+		iframe {
+			height:100%;width:100%;border:none;
+			margin-top: -20px;
+			padding-top: -30px;
+		}
+
+</style>
+{% endblock %}
+
+{% block otherscript %}
+{% endblock %}
+
+{% block content %}
+{% load exam_extras %}
+{% load learn_extras %}
+<!-- nav bar -->
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+          	<a class="navbar-brand" href="#">{{resource.resource_name}}</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          	<ul class="nav navbar-nav navbar-right">
+            	<li>
+            		<a href="#noteModal" data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span>课程笔记</a>
+            	</li>
+            	<li>
+            		<a href="/course/comment/{{resource.course.id}}/" target="_blank">
+            			<span class="glyphicon glyphicon-star"></span>
+            		课程评价</a>
+            	</li>
+            	<li>
+            		<a href="javascript:void(0)" onclick="resourceFinish()" ><span class="glyphicon glyphicon-log-out"></span>
+            		退出课件</a>
+            	</li>
+            	
+          	</ul>
+        </div>
+    </div>
+</div>
+<!-- status info -->
+<div class="container">
+	<div class="status-info">
+		<div class="row">
+			<div class="col-md-4">
+				<span>标签：{{ resource.resource_tags }}</span>
+			</div>
+			<div class="col-md-4" style="text-align:center">
+				<span>访问：{{ resource.resource_viewtimes|default:0 }}次</span>
+			</div>
+			<div class="col-md-4">
+				<span style="float:right;margin-right:0px;">
+					累计学习：{{ learnDetail.learn|timesum|timelength }}
+				</span>	
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="videoDiv">	
+	<video id="v" name="v" controls="controls" width="826" height="360" poster="{{STATIC_URL}}image/video_bg1.jpg" preload="metadata" aria-describedby="full-descript">
+		<source type="video/webm" src="{{resource.resource_path.url}}" />
+		<source type="video/ogg" src="{{resource.resource_path.url}}" />
+	</video>
+</div>
+
+<p  style="margin-top:30px">本次计时：<span id="time">0</span></p>
+
+<!-- note -->
+<div class="modal fade" id="noteModal" role="dialog" 
+aria-labelledby="noteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span>课程笔记</h4>
+      </div>
+      <div class="modal-body">
+      	<iframe id="noteFrame" name="noteFrame" ></iframe>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- comment -->
+<div class="modal fade" id="commentModal"  role="dialog" 
+aria-labelledby="commentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <h4 class="modal-title"><span class="glyphicon glyphicon-star"></span>课程评价</h4>
+	    </div>
+      	<div class="modal-body">
+	      	<!-- comment score -->
+	      	<iframe id="commentFrame" name="commentFrame"   ></iframe>
+      	</div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<script typt="text/javascript">
+	
+	var hour=0;
+	var min=0;
+	var second=0;
+	var sum=0;
+	var time;
+
+	var taskid=0;
+	var array=window.location.href.split('/');
+	taskid=array[array.length-4];
+	
+	$(function(){		
+
+		$('#noteModal').on('shown.bs.modal', function (e) {
+		  $('#noteFrame').attr('src','/course/note/?courseid='+array[array.length-3]);
+		});
+
+		$('#commentModal').on('shown.bs.modal', function (e) {
+		  $('#commentFrame').attr('src','/course/comment/');
+		});
+
+		var video=document.getElementById('v');
+		// add pause listen
+		video.addEventListener("pause", function(){
+			clearInterval(time);			
+			// add the interval time
+			second++;
+			sum++;
+		});
+		// add play listen
+		video.addEventListener("play",	function(){
+			time = setInterval(function () {
+		      second++;
+		      sum++;
+		      $('#time').html(timeStrFormat());
+		  	}, 1000); //每1000毫秒即1秒执行一次此函数
+		});
+
+		// $(window).bind('beforeunload',function(){
+		// 	return '确定要退出视频学习吗';
+		// });
+
+	});
+
+	function timeStrFormat() {
+		if(second==60) {
+			min += 1;
+			second=0;
+
+			if(min==60) {
+				hour += 1;
+				min=0;
+			}
+		}	
+		return hour+':'+min+':'+second;
+	}
+
+	// finish viewing the resource
+	function resourceFinish() {
+		if(confirm('确定要结束本次视频学习吗')) {
+			$(window).unbind('beforeunload');
+			document.getElementById('v').pause();
+			window.location.href='/learn/view/finish/{{learnDetail.id}}/?timelength='+sum+'&taskid='+taskid;
+		}
+	}
+
+	jQuery('video').acornMediaPlayer({
+		themes: 'access accesslight'
+	});
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}添加课程详细信息{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+			#coursebaseinfo {
+				color: #0E2D5F;
+				border: 1px #8db2e3 solid;
+				background-color: #e0ecff;
+				margin: 10px 0px;
+				margin-bottom: 20px;
+				padding: 0px 5px;
+				width: 728px;
+			}
+
+			#resourceAddDlg {
+				padding: 0px 5px;
+				color: #0E2D5F;
+			}
+
+			#resourceAddDlg #resource_add_div {
+				width: 350px;
+				font-weight: bold;
+				padding-top: 20px;
+				margin: 0 auto;
+			}
+
+			#resource_add_div table tr {
+				height:30px;
+			}
+
+			.validatebox-style {
+				width:250px;border:1px solid #8db2e3;
+			}
+			.textarea-style {
+				width:330px;border:1px solid #8db2e3;
+				height:140px;
+			}
+
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/course/courseadddetail.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/jquery.form.js"></script>
+{% endblock %}
+
+{% block content %}
+
+		<!-- course info -->
+		<div id="coursebaseinfo">
+			<h3>{{ course.course_name }}</h3>
+			<ul>
+				<li>标签：{{ course.course_tags }}</li>
+				<li>学分：{{ course.course_credit }}</li>
+				<li>类型：{{ course.coursetype.coursetype_name }}</li>
+			</ul>
+		</div>
+
+		<table id="dg" class="easyui-datagrid" title="资源信息列表" style="width:740px;height:396px;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			url:'/course/resource/list/{{ course.id }}/',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+					<th data-options="field:'resource_name',width:150" 
+					formatter="resourceNameFormatter">资源名称</th>
+					<th data-options="field:'resource_tags',width:100" 
+					formatter="resourceTagsFormatter">资源标签</th>
+					<th data-options="field:'resource_iscourseware',width:80" 
+					formatter="resourceIsCoursewareFormatter">是否为课件</th>
+					<th data-options="field:'resource_candownload',width:80" 
+					formatter="resourceCanDownloadFormatter">是否可下载</th>
+					<th data-options="field:'resource_viewtimes',width:90" 
+					formatter="resourceViewTimesFormatter">资源浏览次数</th>
+					<th data-options="field:'resource_downloadtimes',width:90" 
+					formatter="resourceDownloadtimesFormatter">资源下载次数</th>
+					<th data-options="field:'resource_status',width:80" formatter="resourceStatusFormatter">资源状态</th>
+				</tr>
+			</thead>
+		</table>
+
+		<!--工具栏-->
+		<div id="toolbar" style="padding:5px;height:auto">
+			<a href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" 
+			onclick="$('#resourceAddDlg').dialog('open')" plain="true" title="添加课件或资源"></a>
+			<a id="tool_edit_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-edit"plain="true" title="编辑课件或资源" onclick="resourceEdit()"></a>
+			<a id="tool_delete_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-remove"
+			plain="true" title="删除课件或资源" onclick="resourceDelete()"></a>
+		</div>
+		<!--add course's courseware or resource -->
+		<div id="resourceAddDlg" title="添加课件或资源" class="easyui-dialog" data-options="closed:true,modal:true" style="width:500px;height:350px" >
+			<form id="form1" action="/course/resource/add/" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+				<div id="resource_add_div">
+					<input type="file" id="resource_path" name="resource_path"/><br /><br />
+					<input type="hidden" id="course" name="course"/>
+					<input type="hidden" id="resource_id" name="resource_id"/>
+					<div class="easyui-panel" data-options="closed:false,border:false">
+						<table style="font-size: 12px;font-weight: bold;color: #0E2D5F;">
+							<tr>
+								<td width="30%">课件/资源名称</td>
+								<td width="70%">
+									<input id="resource_name" class="easyui-validatebox validatebox-style" type="text" name="resource_name" data-options="required:true,missingMessage:'课程名称不能为空'" />
+								</td>
+							</tr>
+							<tr>
+								<td>课件/资源标签</td>
+								<td>
+									<input id="resource_tags" class="easyui-validatebox validatebox-style" type="text" name="resource_tags" data-options="required:true,missingMessage:'课程标签不能为空以逗号相隔'" />
+								</td>
+							</tr>
+							<tr>
+				    			<td>是否是课件:</td>
+				    			<td>
+				    			<select id="resource_iscourseware" class="easyui-combobox validatebox-style" name="resource_iscourseware" data-options="required:true,missingMessage:'此项必选'">
+				    				<option value="True" selected="selected">是</option>
+									<option value="False">否</option>
+				    			</select>
+				    			</td>
+				    		</tr>
+							<tr>
+								<td>课件达标时长</td>
+								<td>
+									<input id="resource_standardtime" class="easyui-numberbox validatebox-style"  type="text" name="resource_standardtime" />
+								</td>
+							</tr>
+							<tr>
+				    			<td>是否可下载:</td>
+				    			<td>
+				    			<select id="resource_candownload" class="easyui-combobox validatebox-style" name="resource_candownload" data-options="required:true,missingMessage:'此项必选'">
+				    				<option value="True" selected="selected">是</option>
+									<option value="False">否</option>
+				    			</select>
+				    			</td>
+				    		</tr>
+				    		<tr ></tr>
+							<tr>
+								<td colspan="2">
+									<span style="width:200px;margin-left:120px">
+										<a id="submit" href="javascript:void(0)"  class="easyui-linkbutton">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+										<a id="clear" href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#form1').form('clear')">取消</a>
+									</span>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+{% endblock %}

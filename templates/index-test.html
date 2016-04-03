@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Author List
+{% endblock %}
+
+{% block content %}
+{% if latest_author_list %}
+
+    {% for a in latest_author_list %}
+    <b style="color:red">{{ a }}</b>
+    <ul>
+	    <li><b>{{ a.first_name }}</b></li>
+		<li><b>{{ a.last_name }}</b></li>
+		<li><b>{{ a.email }}</b></li>
+	</ul>
+	<p>
+		first_name equals last_name:<br />
+		{% if a.was_firstName_equals_lastName %}YES
+		{% else %}NO
+		{% endif %}
+	</p>
+    {% endfor %}
+    
+{% else %}
+    <p>No authors are available.</p>
+{% endif %}
+{% endblock %}

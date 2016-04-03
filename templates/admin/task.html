@@ -1,0 +1,49 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}任务信息管理{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/datagrid-detailview.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/admin/task.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<table id="dg" title="任务信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'task_name',width:300" formatter="taskNameFormatter">任务名称</th>
+			<th data-options="field:'coursetype',width:200" formatter="coursetypeFormatter">课程类型</th>
+			<th data-options="field:'task_starttime',width:140"  formatter="taskStartTimeFormatter">任务开始时间</th>
+			<th data-options="field:'task_endtime',width:140" formatter="taskEndTimeFormatter">任务结束时间</th>
+			<th data-options="field:'task_status',width:126" formatter="taskStatusFormatter">任务状态</th>
+			<th data-options="field:'task_ispublish',width:120" formatter="taskIsPublishedFormatter">是否发布</th>
+		</tr>
+	</thead>
+</table>
+<!--工具栏-->
+<div id="toolbar" style="padding:5px;height:auto">
+	<a href="/admin/task/showadd/" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" 
+	 plain="true" title="添加任务"></a>
+	<a id="tool_edit_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-edit"
+	plain="true" title="编辑任务" onclick="taskUpdate()"></a>
+	<a id="tool_delete_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-remove"
+	plain="true" title="删除任务" onclick="taskDelete()"></a>
+	<a id="tool_publish_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-ok"
+	plain="true" title="发布任务" onclick="taskPublish()"></a>
+</div>
+
+
+{% endblock %}

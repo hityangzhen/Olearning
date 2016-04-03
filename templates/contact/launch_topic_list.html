@@ -1,0 +1,77 @@
+{% extends "contact/launch_topic.html" %}
+
+{% block title %}课程话题信息{% endblock %}
+
+{% block childstyle %}
+	<style type="text/css">
+	table {
+		margin-top: 30px;
+		font-size: 14px;
+	}
+	table thead {
+		text-align: center;
+		background-color: #f8f8f8;
+	}
+	.pagination {
+		float: right;
+	}
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+  <script type="text/javascript">
+
+    $(function(){
+      var u=window.location.href;
+      var array=u.split('/');
+      var courseid=array[array.length-3];
+      $('#courseid').val(courseid);
+    });
+
+  </script>
+{% endblock %}
+
+{% block status %}
+{% endblock %}
+
+{% block operation %}
+<div class="operation">
+   	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#topic">
+      <span class="glyphicon glyphicon-plus"></span> 发表话题</button>
+
+	  <button type="button" class="btn btn-success" onclick="">
+      <span class="glyphicon glyphicon-cog"></span> 全部帖子</button>
+	  <button type="button" class="btn btn-danger">
+      <span class="glyphicon glyphicon-pushpin"></span>  精华帖</button>
+</div>
+{% endblock %}
+
+{% load exam_extras %}
+{% load contact_extras %}
+
+{% block main %}
+<table class="table table-condensed table-hover">
+    <thead>
+          <tr>
+            <th>话题</th>
+            <th>回答/查看</th>
+            <th>发布人</th>
+            <th>最后回帖</th>
+          </tr>
+    </thead>
+    <tbody>
+        {% for t in tList %}
+          <tr>
+            <td width="55%"><a href="/contact/launch_topic/detail/{{t.id}}/">{{ t.topic_title }}</a></td>
+            <td width="10%">{{ t|replynums }} / {{ t.topic_viewtimes }}</td>
+            <td width="10%">{{ t.topic_userid|replyername:t.topic_usertype }}</td>
+            <td width="20%"><font color="#428bca"> {{ t|replylasttime|fulltimeformat }} </font></td>
+          </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+	<span  style="margin-right: 10px; float: right">记录总数 :<b> {{ tList|length }} </b></span>
+</div>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends "exam/exercisepreview.html" %}
+
+{% block title %}练习审阅详细信息{% endblock %}
+{% load exam_extras %}
+{% block exercisepaper_status %}
+<div class="exercise-title alert alert-warning" style="background-image:none;text-align:center">
+	<h5 style="margin:0px;">客观题已由系统自动评分，教师只需对主观题评分</h5>
+</div>
+{% endblock %}
+
+{% block exercisepaper_result %}
+{% endblock %}
+
+{% block exercisescores %}
+
+<script type="text/javascript">
+
+	function verifyCheck(obj) {
+		if(Number($(obj).val())>'10' || $(obj).val()=='') {
+			$($(obj).parent().find('span')[1]).html('此题最高的分为10');
+		}
+		else
+			$($(obj).parent().find('span')[1]).html('');	
+	}
+
+	function finishVerify() {
+		var nums=$('input[type=number]');
+		var verifys='';
+		for(var i=0;i<nums.length;i++) {
+			if($(nums[i]).val()=='' || Number($(nums[i]).val())>10) {
+				return ;
+			}
+
+			verifys += nums[i].id.split('statement_verify_')[1]+':'+$(nums[i]).val()+','
+		}
+		//alert(verifys);
+		verifySave(verifys);
+	}
+
+	function verifySave(verifys) {
+		$.ajax({
+			type:'POST',
+			data:{'verifys':verifys},
+			dataType:'json',
+			url:'/exam/teacher_exam/verify/{{ exam.id }}/save/',
+			success:function(data){
+				alert(data.tip);
+				if(data.status=='success')
+					window.close();
+			},
+			error:function(XMLHttpRequest,txtStatus,errorThrown){
+				alert("网络出错"+txtStatus+","+errorThrown);
+			}
+		});
+	}
+
+	$(function(){
+
+		var score_div='<div class="exercise_score">\
+		<p>\
+		<span id="iscorrect"></span>\
+		得<span id="score"></span>分\
+		</p>\
+		</div>';
+
+		var verify_div='<div class="statement_verify" style="padding-top:10px">\
+		<p>\
+		<span class="label label-warning">请输入此题得分：</span>\
+		&nbsp;&nbsp;<span style="color:red" ></span>\
+		<input style="margin:20px 0px 10px 0px" class="form-control" type="number" placeholder="请输入分值" min="0" max="10" onChange="verifyCheck(this)" />\
+		</p>';		
+
+		var exercise;
+		var j=0;
+		var score;
+		var radios;
+
+		// for judge
+		{% if exercises|exercisesByType:1|length %}
+			exercise=$('#judge .well .exercise');
+
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=score_div;
+				$(exercise[i]).html(content);
+			}
+		
+			{% for exercise in exercises|exercisesByType:1 %}
+				score=$(exercise[j]).find('.exercise_score')[0];
+				$($(score).find('#iscorrect')[0]).html('{{ exercise|exerciseiscorrect:exam }}');
+				$($(score).find('#score')[0]).html('{{ exercise|exercisescore:exam }}');
+
+				radios=$(exercise[j]).find('.exercise_item input[type=radio][value={{exercise|radioanswer:exam}}]').attr('checked','checked');
+
+				j++;
+			{% endfor %}
+		{% endif %}
+
+		// for single
+		{% if exercises|exercisesByType:2|length %}
+			j=0;
+			exercise=$('#single .well .exercise');
+
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=score_div;
+				$(exercise[i]).html(content);
+			}
+		
+			{% for exercise in exercises|exercisesByType:2 %}
+				score=$(exercise[j]).find('.exercise_score')[0];
+				$($(score).find('#iscorrect')[0]).html('{{ exercise|exerciseiscorrect:exam }}');
+				$($(score).find('#score')[0]).html('{{ exercise|exercisescore:exam }}');
+
+				radios=$(exercise[j]).find('.exercise_item input[type=radio][value={{exercise|radioanswer:exam}}]').attr('checked','checked');
+
+				j++;
+			{% endfor %}
+		{% endif %}
+
+		// for statement
+		{% if exercises|exercisesByType:3|length %}
+			j=0;
+			exercise=$('#statement .well .exercise');
+
+			// add teacher's verify block
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=verify_div;
+				$(exercise[i]).html(content);
+			}
+
+			exercise=$('#statement .well .exercise');		
+			{% for exercise in exercises|exercisesByType:3 %}
+				var textarea=$(exercise[j]).find('textarea')[0];
+				$(textarea).attr('readonly','readonly');
+				$(textarea).text('{{ exercise|statementanswer:exam }}');
+
+				$($(exercise[j]).find('input[type=number]')[0]).attr('id','statement_verify_{{ exercise.id }}');
+
+				j++;
+
+			{% endfor %}
+		{% endif %}
+	});
+</script>
+{% endblock %}
+
+{% block bottom_operation %}
+<div style="width:200px;margin:0 auto">
+	<button class="btn btn-block btn-primary" id="exit" style="margin-bottom:40px;float:right" 
+	onclick="finishVerify()"><span class="glyphicon glyphicon-ok"></span>完成
+	</button>
+</div>
+{% endblock %}

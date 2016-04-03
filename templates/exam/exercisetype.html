@@ -1,0 +1,88 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}习题类型管理{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/exam/exercisetype.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+	<table id="dg" class="easyui-datagrid" title="习题类型列表" style="width:600px;height:380px"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			url:'/exam/exercisetype/list/',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+				<th data-options="field:'pk',width:100">习题类型编号</th>
+				<th data-options="field:'exercisetype_name',width:200" 
+				formatter="exerciseTypeNameFormatter">习题类型名称</th>
+				<th data-options="field:'exercisetype_score',width:140" 
+				formatter="exerciseTypeScoreFormatter">习题分值</th>
+				<th data-options="field:'exercisetype_status',width:100"
+				formatter="exerciseTypeStatusFormatter">习题状态</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<!--工具栏-->
+	<div id="toolbar" style="padding:5px;height:auto">
+		<a href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" 
+		onclick="$('#exercisetypeDlg').dialog('open')" plain="true" title="添加习题类型"></a>
+		<a id="tool_edit_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-edit"
+		plain="true" title="编辑习题类型" onclick="preUpdate()"></a>
+		<a id="tool_delete_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-remove"
+		plain="true" title="删除习题类型" onclick=""></a>
+	</div>
+  </div>
+  <div style="margin:5px 0;"></div>
+  <!--编辑习题类型对话框-->
+  <div id="exercisetypeDlg" class="easyui-dialog" title="编辑习题类型" 
+  		style="width:400px;height:240px;padding:10px;overflow: hidden;" 
+  		data-options="modal:true,closed:true">
+		<div style="padding:10px 0 10px 60px">
+	    <form id="form1" method="post">
+	    	{% csrf_token %}
+	    	<table>
+	    		<tr>
+	    			<td>习题类型名称:</td>
+	    			<td><input id="exercise_name" class="easyui-validatebox" style="width:150px;border:1px #8db2e3 solid;" type="text" name="exercise_name" data-options="required:true,
+					missingMessage:'习题类型名称不能为空'" ></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>习题类型分值:</td>
+	    			<td><input id="exercise_score" class="easyui-numberbox" style="width:150px;border:1px #8db2e3 solid;" type="text" name="exercise_score" 
+	    			data-options="required:true,missingMessage:'分值不能为空'" ></input></td>
+	    		</tr>
+	    		<tr>
+	    			<td>是否启用:</td>
+	    			<td>
+	    			<select id="exercise_status" class="easyui-combobox" name="exercise_status" style="width:150px;">
+	    				<option value="True" selected="selected">可用</option>
+						<option value="False">不可用</option>
+	    			</select>
+	    			</td>
+	    		</tr>
+	    		<input type="hidden" id="id" name="id" />
+	    		</table><br /><br />
+	    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    		<span style="width:30px"><span>
+	    		<a id="add_link" href="javascript:void(0)"  class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'"
+	    		onclick="exercisetypeEdit()" >&nbsp;&nbsp;保存&nbsp;&nbsp;</a>
+	    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	    		<a href="javascript:void(0)"  class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'"
+	    		onclick="$('#exercisetypeDlg').dialog('close')" >&nbsp;&nbsp;取消&nbsp;&nbsp;</a>
+	    		</form>
+	    </div>
+  </div>
+{% endblock %}

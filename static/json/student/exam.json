@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "text": "学员练习信息",
+        "attributes":{ 
+            "url":"/exam/student/show_participated/"
+        } 
+    }
+]

@@ -1,0 +1,33 @@
+{% extends "main/bootstrap.html" %}
+
+{% block title %}{{result.title}}{% endblock %}
+
+{% block otherstyle %}
+<style type="text/css">
+	.alert-warning {
+        background-image:none;
+    }
+</style>
+{% endblock %}
+
+{% block otherscript %}
+{% endblock %}
+
+{% block content %}
+{% load learn_extras %}
+<div class="container">
+	<div class="alert alert-warning">
+		<strong>{{result.info}}</strong>
+	</div>
+	<p id="autodirect">5秒后自动跳转到{{ result.urlname }}</p>
+</div>
+<script type="text/javascript">
+	$(function(){
+		// 
+		setTimeout(function(){
+	        window.location.href='{{result.redirect_url}}';
+	    },5000);
+	})
+	
+</script>
+{% endblock %}

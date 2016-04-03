@@ -1,0 +1,45 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}用户信息导入{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+		body {
+			font-size:18px;
+		}
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/admin/userimport.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="border: 1px #8db2e3 solid;padding:50px;height:80%;color: #0E2D5F;
+			background-color: #e0ecff;">
+<div style="width:350px;margin:0 auto;">
+	<form id="form1" method="post"  enctype="multipart/form-data">
+		<div>
+			选择用户类型：
+			<select id="usertype" class="easyui-combobox" name="usertype" style="width:200px;" 
+			data-options="required:true,missingMessage:'此项必选'">
+				<option value="1">教师</option>
+				<option value="0">学员</option>
+			</select>	
+		</div>
+		<p />
+		<div>
+			选择上传文件：
+			<input type="file" id="userfile" name="userfile" />
+		</div>
+		<div style="margin-top:20px;">
+			<a href="javascript:void(0)" style="margin-left:110px;" data-options="toggle:true,iconCls:'icon-redo'"  class="easyui-linkbutton" onclick="userImport()">导入</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		</div>
+	</form>
+	<div id="process">
+		<p id="status"></p>
+		<p id="result"></p>
+	</div>
+</div>
+</div>
+{% endblock %}

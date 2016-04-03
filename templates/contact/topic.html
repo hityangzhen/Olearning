@@ -1,0 +1,55 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}话题中心{% endblock %}
+
+{% block otherstyle %}
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript">
+		function enterFormatter(value,row,index) {
+			return '<a target="_blank" href="/contact/launch_topic/'+value+'/list/">进入课程话题</a>';
+		}
+
+		function detailFormatter(value,row,index) {
+			{% if request.session.user.usertype == 2 %}
+			return '<a href="/contact/topic/'+row.course_id+'/show_detail/">查看课程话题</a>';
+			{% endif %}
+		}
+		$(function(){
+
+			var dg=$('#dg');
+			dg.datagrid({
+				url:'/contact/topic/list/',
+			});
+
+			defaultPagination(dg);
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<!-- administrator access -->
+<div style="height:10px;"></div>
+<table id="dg"  title="话题中心" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'course_name',width:300"  formatter="">课程名称</th>
+			<th data-options="field:'topic_nums',width:150"  formatter="">发帖数量</th>
+			<th data-options="field:'topic_lastreply',width:200"  formatter="">最后发帖</th>
+			<th data-options="field:'detail',width:200"  formatter="detailFormatter">详情查看</th>
+			<th data-options="field:'course_id',width:200"  formatter="enterFormatter">课程话题</th>
+		</tr>
+		</tr>
+	</thead>
+</table>
+{% endblock %}

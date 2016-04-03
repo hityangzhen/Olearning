@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "text": "课程信息列表",
+        "attributes":{ 
+			"url":"/course"
+		} 
+    },
+    {
+        "id": 2,
+        "text": "课程信息审核",
+        "attributes":{ 
+            "url":"/course/showuncheck/"
+        } 
+    }
+]

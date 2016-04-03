@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <!-- 最新 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+	<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+	<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/docs.css">
+
+	<script src="{{STATIC_URL}}js/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		{% block content %}
+		{% endblock %}   
+	</div>
+</body>
+</html>

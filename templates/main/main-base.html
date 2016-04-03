@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		{# main page template #}
+
+		<title>{% block title %}{% endblock %}</title>
+
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="cache-control" content="no-cache">
+		<meta http-equiv="expires" content="0">
+		<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+		<meta http-equiv="description" content="This is my page">
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}theme/bootstrap/easyui.css">
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}theme/icon.css">
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/demo.css">
+		<style type="text/css">
+			.fontStyle1{font-weight: bolder;color: #0E2D5F;font-family:微软雅黑;font-size:20px;}
+			.fontStyle2{font-weight: bolder;color: #8F5700;font-family:微软雅黑;font-size:16px;}
+			.fontStyle3{font-weight: bolder;color: #0E2D5F;font-family:微软雅黑;font-size:14px;}
+		</style>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/easyloader.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/clock.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/main.js"></script>
+
+		<style type="text/css">
+			.footer {
+				text-align: center;
+				color: #15428B;
+				margin: 0px;
+				padding: 0px;
+				line-height: 23px;
+				font-weight: bold;
+			}
+
+			a {
+				text-decoration: none;
+				color: black;
+			}
+
+			a:hover {
+				color: red;
+				TEXT-decoration: underline;
+			}
+		</style>
+		<script type="text/javascript">
+
+			function hasUnhandlerMessage() {
+				$.ajax({
+					type:'GET',
+					dataType:'json',
+					url:'/admin/message/hasunhandleredmsg/',
+					success:function(data) {
+						if(data.status=='success') {
+							$('#msg').html('您有未处理的消息');
+							$('#msg').tooltip({
+								content:'<div style="padding:5px;font-size:14px;">'+data.tip+'</div>'
+							});
+						}
+						else 
+							$('#msg').html('');
+						return false;
+					}
+				})
+			}
+
+			$(function(){
+
+				hasUnhandlerMessage();
+
+				var t=setInterval(function () {
+					hasUnhandlerMessage();
+			    }, 60000); //每30秒即1秒执行一次此函数
+			});
+		</script>
+		{% block otherstyle %}{% endblock %}
+		{% block otherscript %}{% endblock %}
+	</head>
+
+	<body>
+		<div class="panel layout-panel layout-panel-north layout-split-north"
+			style="left: 0px; top: 0px; width: 100%; cursor: s-resize; border-bottom: 5px solid #fff;">
+			<div region="north" split="true" border="false"
+				style="overflow: hidden; height: 25px; background-image: url({{STATIC_URL}}image/main_bar.png); background-color: rgb(127, 153, 190); line-height: 20px; color: rgb(255, 255, 255); font-family: Verdana, 微软雅黑, 黑体; width: 100%; background-position: 50% 50%; background-repeat: repeat no-repeat;"
+				class="layout-body panel-body panel-body-noheader panel-body-noborder"
+				title="">
+				<span style="float: right; padding-right: 20px;">
+					<a style="color: white;" href="/logout/">退出</a> 
+				</span>
+				<span id="bgclock" style="float: right; padding-right: 20px;"></span>
+				<span  style="float: right; padding-right: 20px;color:red">
+					<a id="msg" href="#" class="easyui-tooltip" style="color:red" data-options="
+            			content: $('<div></div>'),
+            			onShow: function(){
+            			},
+            			onUpdate: function(cc){
+                			cc.panel({
+                    		width: 170,
+                    		height: 'auto',
+                    		border: false
+                		});
+            		}"></a>
+				</span>
+				<span style="padding-left: 10px;"> 
+					<font style="font-size: 16px; color: #FFFFFF;">在线学习管理系统</font>
+				</span>
+			</div>
+		</div>
+		<div class="panel layout-panel layout-panel-south layout-split-south"
+			style="left: 0px; bottom: 0; width: 100%; cursor: default; border-top: 5px solid #fff;">
+			<div region="south" split="true"
+				style="height: 23px; background-color: rgb(210, 224, 242); width: 100%; background-position: initial initial; background-repeat: initial initial;"
+				class="layout-body panel-body panel-body-noheader" title="">
+				<div class="footer">
+					<a href="#" on target="_blank">西南交通大学计算机软件</a>&nbsp;&nbsp;
+					<a href="#"></a>&nbsp;|&nbsp; Copyright © 2013-2014.All Right
+					Reserved.
+				</div>
+			</div>
+		</div>
+		<!-- user left slide bar -->
+		<div id="mylayout" class="easyui-layout"
+			style="width: 98%; position: absolute; top: 30px; bottom: 30px; left: 1%;">
+			<div data-options="region:'west',split:false,title:'导航信息'"
+				style="width: 180px;">
+				<div class="easyui-accordion" data-options="fit:true,border:false">
+					{% block content %}
+					{% endblock %}
+				</div>
+			</div>
+			<div id="welcome_div" style="background: #E0ECFF;"
+				data-options="region:'center',iconCls:'icon-ok'">
+				<div id="tt" class="easyui-tabs"
+					data-options="fit:true,border:true,plain:true">
+					<div title="欢迎使用" style="padding: 5px;">
+						<div style="width: 700px; margin-left: 8%;">
+							<h1 align="left"
+								style="font-weight: bolder; color: #0E2D5F; font-family: 微软雅黑; font-size: 24px;">
+									<font style="font-weight: bolder; color: red; font-family: 微软雅黑; font-size: 24px;">{{ request.session.user.realname }}，您好！欢迎使用在线学习管理系统</font>
+							</h1>
+							<br/><br/>
+							<div>
+								<div align="left" style="font-weight: bolder; color: #0E2D5F; font-family: 微软雅黑; font-size: 18px;">
+									在线学习管理系统使用说明
+								</div>
+								<br/><br/>
+							</div>
+							<div class="demo-tip icon-tip"></div>
+							<div style="font-weight: bolder; color: #0E2D5F; font-family: 微软雅黑; font-size: 14px;">
+								用户通过登录界面，登录该评价标准平台，登录成功后，选择页面左边的菜单栏，选择相应的操作。
+							</div>
+							<br/><br/>
+							<div class="demo-tip icon-tip"></div>
+							<div style="font-weight: bolder; color: #0E2D5F; font-family: 微软雅黑; font-size: 14px;">
+								如果未找到您所需要的功能菜单，请确认自己登录时的角色选择是否正确。
+							</div>
+							<br/><br/>
+							<div class="demo-tip icon-tip"></div>
+							<div style="font-weight: bolder; color: #0E2D5F; font-family: 微软雅黑; font-size: 14px;">
+								用户在操作过程中，请注意查看页面中的提示信息，以免由于操作不当，造成不必要的烦恼。
+							</div>
+							<br/><br/>
+						</div>
+					</div>
+
+					<div id="mm" class="easyui-menu" data-options="top:30"
+						style="width: 150px; background: #E0ECFF; color: #0E2D5F;">
+						<div id="refresh">
+							刷新
+						</div>
+						<div class="menu-sep"></div>
+						<div id="close">
+							关闭
+						</div>
+						<div id="closeall">
+							全部关闭
+						</div>
+						<div id="closeother">
+							除此之外全部关闭
+						</div>
+						<div class="menu-sep"></div>
+						<div id="closeright">
+							当前页右侧全部关闭
+						</div>
+						<div id="closeleft">
+							当前页左侧全部关闭
+						</div>
+						<div class="menu-sep"></div>
+						<div id="exit">
+							退出
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

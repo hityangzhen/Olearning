@@ -1,0 +1,85 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程详细信息{% endblock %}
+
+{% block otherstyle %}
+  <style type="text/css">
+    #back{
+      margin-left: 20px;
+      color: #0E2D5F;font-weight:bold;font-size:18px;
+    }
+    table tr td:nth-child(4) {
+      padding-left: 15px;
+    }
+    #course-tabinfo .easyui-tabs div p{
+      padding: 10px;
+      color: #0E2D5F;font-weight:bold;font-size:12px;
+    }
+  </style>
+{% endblock %}
+
+{% block otherscript %}
+	
+{% endblock %}
+{% load course_extras %}
+{% load learn_extras %}
+{% block content %}
+<div style="margin:2px 0;"></div>
+
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " 
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+
+  	<div class="easyui-layout" style="width:650px;height:220px;margin:0 auto">
+  		<div data-options="region:'north',split:false,border:false" style="padding-top:6px;height:40px;color: #0E2D5F;text-align:center">
+  			<b style="font-size:22px" id="course-name">{{ course.course_name }}</b>
+  		</div>
+
+  		<!-- course phtot -->
+  		<div data-options="region:'west',split:false,border:false" style="width:150px;padding:20px 10px 20px 10px">
+  			<img src="{{ course.course_icon.url }}" alt="..." style="width:120px;height:130px"/>
+  		</div>
+  		<!-- course detail -->
+  		<div data-options="region:'center',split:false,border:false" style="padding:10px">
+  			<table style="border:0;color: #0E2D5F;font-weight:bold;font-size:18px">
+  				<tr height="50px">
+  					<td width="15%">课程分类</td>
+  					<td width="60%">{{ course.coursetype.coursetype_name }}</td>
+  					<td width="12%" align="right">讲师</td>
+  					<td width="120px%" >{{ course.teacher.teacher_realname }}</td>
+  				</tr>
+  				<tr  height="50px">
+  					<td>达标学时</td>
+  					<td>{{ course.course_lessonnum }}</td>
+  					<td align="right">学分</td>
+  					<td>{{ course.course_credit }}</td>
+  				</tr>
+  				<tr  height="50px">
+  					<td>总体评分</td>
+  					<td>({{course.id|coursecommentlist|coursewholecomment}}分/
+              {{course.id|coursecommentlist|length}}人评论)</td>
+  					<td align="right">人数</td>
+  					<td>{{ course.id|courselearn|length }}</td>
+  				</tr>
+  			</table>
+  		</div>  				
+  	</div>
+  	<div id="course-tabinfo" data-options="region:'south',split:false,border:false" style="width:650px;height:250px;margin:0 auto;margin-top:20px">
+  		<div class="easyui-tabs" data-options="border:false">
+  			<div title="课程简介" >
+          <p>
+  				  {{ course.course_description }}
+          </p>
+  			</div>
+  			<div title="课程大纲" >
+          <p>
+  				  {{ course.course_outline }}            
+          </p>
+  			</div>
+  			<div title="培训对象" >
+          <p>
+  				  {{ course.course_learner }}
+          </p>
+  			</div>
+  		</div>
+  	</div>
+{% endblock %}

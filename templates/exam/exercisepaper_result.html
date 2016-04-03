@@ -1,0 +1,104 @@
+{% extends "exam/exercisepreview.html" %}
+
+{% block title %}练习结果{% endblock %}
+{% load exam_extras %}
+{% block exercisepaper_status %}
+{% endblock %}
+
+{% block exercisepaper_result %}
+<div class="exercise-title alert alert-danger" style="background-image:none;text-align:center">
+	<h5 style="margin:0px;">本次练习总得分：{{ exam.exam_scores }}，{{ exam|examispassed }}</h5>
+</div>
+{% endblock %}
+
+{% block exercisescores %}
+
+<script type="text/javascript">
+	$(function(){
+
+		var score_div='<div class="exercise_score">\
+		<p>\
+		<span id="iscorrect"></span>\
+		得<span id="score"></span>分\
+		</p>\
+		</div>';
+
+		var exercise;
+		var j=0;
+		var score;
+		var radios;
+
+		// for judge
+		{% if exercises|exercisesByType:1|length %}
+			exercise=$('#judge .well .exercise');
+
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=score_div;
+				$(exercise[i]).html(content);
+			}
+		
+			{% for exercise in exercises|exercisesByType:1 %}
+				score=$(exercise[j]).find('.exercise_score')[0];
+				$($(score).find('#iscorrect')[0]).html('{{ exercise|exerciseiscorrect:exam }}');
+				$($(score).find('#score')[0]).html('{{ exercise|exercisescore:exam }}');
+
+				radios=$(exercise[j]).find('.exercise_item input[type=radio][value={{exercise|radioanswer:exam}}]').attr('checked','checked');
+
+				j++;
+			{% endfor %}
+		{% endif %}
+
+		// for single
+		{% if exercises|exercisesByType:2|length %}
+			j=0;
+			exercise=$('#single .well .exercise');
+
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=score_div;
+				$(exercise[i]).html(content);
+			}
+		
+			{% for exercise in exercises|exercisesByType:2 %}
+				score=$(exercise[j]).find('.exercise_score')[0];
+				$($(score).find('#iscorrect')[0]).html('{{ exercise|exerciseiscorrect:exam }}');
+				$($(score).find('#score')[0]).html('{{ exercise|exercisescore:exam }}');
+
+				radios=$(exercise[j]).find('.exercise_item input[type=radio][value={{exercise|radioanswer:exam}}]').attr('checked','checked');
+
+				j++;
+			{% endfor %}
+		{% endif %}
+
+		// for statement
+		{% if exercises|exercisesByType:3|length %}
+			j=0;
+			exercise=$('#statement .well .exercise');
+
+			for(var i=0;i<exercise.length;i++) {
+				var content=$(exercise[i]).html();
+				content+=score_div;
+				$(exercise[i]).html(content);
+			}
+		
+			{% for exercise in exercises|exercisesByType:3 %}
+				var textarea=$(exercise[j]).find('textarea')[0];
+				$(textarea).attr('readonly','readonly');
+				$(textarea).text('{{ exercise|statementanswer:exam }}')
+
+				score=$(exercise[j]).find('.exercise_score')[0];
+				$($(score).find('#iscorrect')[0]).html('{{ exercise|exerciseiscorrect:exam }}');
+				$($(score).find('#score')[0]).html('{{ exercise|exercisescore:exam }}');
+				j++;
+			{% endfor %}
+		{% endif %}
+	});
+</script>
+{% endblock %}
+
+{% block bottom_operation %}
+<button class="btn btn-large btn-success" id="exit" style="margin-bottom:40px;float:right" 
+onclick="javascript:window.close()"><span class="glyphicon glyphicon-log-out"></span> 退出
+</button>
+{% endblock %}

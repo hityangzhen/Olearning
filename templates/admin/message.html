@@ -1,0 +1,82 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}消息列表{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript">
+
+		var u=window.location.href;
+		var type=(u.split('?')[1]).split('=')[1]
+
+		function messageContentFormatter(value,row,index) {
+			return row.fields.message_content;
+		}
+
+		function messageSenderFormatter(value,row,index) {
+			return row.fields.message_sender;
+		}
+
+		function messageStarttimeFormatter(value,row,index) {
+			return row.fields.message_starttime.replace(/[TZ]/g,' ');
+		}
+
+		function messageHandlerFormatter(value,row,index) {
+			return row.fields.message_ishandlered?'<span style="color:#888;font-weight:bolder">已处理</span>':'<a href="javascript:void(0)" onclick="messageHandler('+row.pk+')">我知道了</a>';
+		}
+
+		function messageHandler(id) {
+			$.ajax({
+				type:'GET',
+				url:'/admin/message/handler/'+id+'/',
+				dataType:'json',
+				success:function(data) {
+					$('#dg').datagrid('reload');
+				},
+				error:function(XMLHttpRequest,txtStatus,errorThrown){
+                    $.messager.alert('信息反馈',"网络出错"+txtStatus+","+errorThrown,'warning',function (){
+                        $('#dg').datagrid('reload'); 
+                    });
+               	}
+			})
+		}
+
+		$(function(){
+			var dg=$('#dg');
+			dg.datagrid({
+				url:'/admin/message/list/?type='+type,
+			});
+
+			defaultPagination(dg);
+		});
+
+	</script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+
+<table id="dg"  title="消息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'pk',width:50">编号</th>
+			<th data-options="field:'message_content',width:400" formatter="messageContentFormatter">消息内容</th>
+			<th data-options="field:'message_sender',width:200" formatter="messageSenderFormatter">消息来源</th>
+			<th data-options="field:'message_starttime',width:200" formatter="messageStarttimeFormatter">发送时间</th>
+			<th data-options="field:'message_handler',width:200" formatter="messageHandlerFormatter">处理</th>
+		</tr>
+	</thead>
+</table>
+
+{% endblock %}

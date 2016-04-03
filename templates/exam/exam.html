@@ -1,0 +1,235 @@
+{% extends "exam/static_exercisepaper.html" %}
+
+{% block title %}在线练习{% endblock %}
+
+{% block otherstyle %}
+<style type="text/css">
+	#timer {
+		top: 0px; 
+		float: right; 
+		position: fixed; 
+		background-color: rgb(252, 248, 227); 
+		border: 1px solid rgb(251, 238, 213); 
+		border-top-left-radius: 4px; 
+		border-top-right-radius: 4px; 
+		border-bottom-right-radius: 4px; 
+		border-bottom-left-radius: 4px; 
+		padding: 14px 24px 14px 24px; 
+		left: 0px;
+	}
+  #exercise_mark {
+    top: 0px; 
+    right:0px;
+    position: fixed; 
+    width: 220px;
+    float: right;
+  }
+
+  .panel-default>.panel-heading {
+    background-image:none;
+    background-color: #fefefe;
+  }
+  .panel-title a:hover  {
+    color: #428bca;
+    text-decoration:none;
+  }
+  .panel-body {
+    padding:0px;
+  }
+  table {
+    margin-bottom: 0px ! important;
+    font-size: 13px;
+    text-align: center;
+  }
+
+</style>
+{% endblock %}
+{% block otherscript %}
+  <script src="{{STATIC_URL}}js/exam/exercise_mark.js"></script>
+{% endblock %}
+
+{% load exam_extras %}
+<!-- timeing -->
+{% block timimg %}
+<div id="timer" >
+  <div style="color:#C09853;font-weight:bold;">剩余时间</div>
+  <div style="text-align: center;color:#C09853;">
+    <span id="time_left">{{ exercisepaper.exercisepaper_lasttime|timeingformat }}</span>
+  </div>
+</div>
+<form id="form1" method="post" action="">
+  {% csrf_token %}
+  <input type="hidden" id="answers" name="answers" value="" />
+  <input type="hidden" id="exam" name="exam" value="{{exam.id}}" />
+</form>
+  <script type="text/javascript">
+
+  function timeFormat(seconds) {
+    var hour=parseInt(seconds/3600);
+    var minute=parseInt((seconds%3600)/60);
+    var second=(seconds%3600)%60;
+
+    hour=hour>9?hour:'0'+hour;
+    minute=minute>9?minute:'0'+minute;
+    second=second>9?second:'0'+second;
+    return hour+':'+minute+':'+second;
+  }
+
+  // submit the exam
+
+  function submitExam() {
+    if(confirm('确定提交吗？')) {
+      $('#answers').val(getAnswers());
+      var form=$('#form1');
+      form.attr('action',window.location.href+'finish/');
+      form.submit();
+    }
+  }
+
+  function getAnswers() { 
+    var judgeanswers=getRadioAnswers($('#judge_mark_table'));
+    var singleanswers=getRadioAnswers($('#single_mark_table'));
+    var statementanswers=getTextareaAnswers($('#statement_mark_table'));
+
+    var answers='';
+    if(judgeanswers!='')
+      answers += judgeanswers + '#';
+    if(singleanswers!='')
+      answers += singleanswers + '#';
+    if(statementanswers!='')
+      answers += statementanswers + '#';
+    //alert(answers);
+    return answers;
+    
+  }
+
+
+  $(function(){
+
+    var seconds={{ exercisepaper.exercisepaper_lasttime }} * 60;
+
+    var t=setInterval(function () {
+      $('#time_left').html(timeFormat(seconds));
+      if(seconds==0) {
+        clearInterval(t);
+        submitExam();
+      }
+      seconds--;
+      }, 1000); //每1秒即1秒执行一次此函数
+
+  });
+
+  </script>
+
+{% endblock %}
+
+<!-- mark the exercise -->
+{% block exercisetip %}
+<div id="exercise_mark">
+  <div class="panel-group" id="accordion">
+    <!-- add exercise mark code here -->
+  </div>
+  <!-- exercise operation -->
+  <div id="exercise_operation">
+    <button id="save" type="button" id="save_paper" style="margin-top: 10px" class="btn btn-warning btn-block">
+     <span class="glyphicon glyphicon-floppy-disk"></span>保存答卷</button>
+    <button id="submit" type="button" class="btn btn-primary btn-block" style="margin-top: 10px;" 
+    onclick="submitExam()">
+     <span class="glyphicon glyphicon-cloud-upload"></span>提交答卷</button>
+  </div>
+</div><!-- mark the exercise end -->
+
+<script type="text/javascript">
+var cols=6;
+
+$(function(){
+  initExerciseMark();
+});
+
+
+function initExerciseMark() {
+  // for judge
+  {% if exercises|exercisesByType:1|length %}
+    $('#accordion').append(getExerciseMarkRawHtml(1,{{exercises|exercisesByType:1|length}}));
+    insertExerciseMark($('#judge_mark_table'),{{exercises|exercisesByType:1|length}});
+  {% endif %}
+  // for single
+  {% if exercises|exercisesByType:2|length %}
+    $('#accordion').append(getExerciseMarkRawHtml(2,{{exercises|exercisesByType:2|length}}));
+    insertExerciseMark($('#single_mark_table'),{{exercises|exercisesByType:2|length}});
+  {% endif %}
+
+  // for statement
+  {% if exercises|exercisesByType:3|length %}
+    $('#accordion').append(getExerciseMarkRawHtml(3,{{exercises|exercisesByType:3|length}}));
+    insertExerciseMark($('#statement_mark_table'),{{exercises|exercisesByType:3|length}});
+  {% endif %}
+  
+}
+
+function insertExerciseMark(table,nums) {
+  var mark={count:0,trs:''};
+  var rows=parseInt((nums+cols-1)/cols);
+  var spacenums=(nums%cols==0?0:(cols-nums%cols));
+
+  if(spacenums==0)
+    fullTrHtml(rows,mark);
+  else {
+    fullTrHtml(rows-1,mark);
+    noneFullTrHtml(rows,spacenums,mark);
+  }
+  table.append(mark.trs);
+}
+
+function fullTrHtml(fullrows,mark) {
+  for(var i=0;i<fullrows;i++) {
+    mark.trs += '<tr>';
+    for(var j=0;j<cols;j++) {
+      mark.count=i*cols+j;
+      mark.trs += '<td>'+(mark.count+1)+'</td>';
+    }
+    mark.trs += '</tr>';
+  }
+}
+
+function noneFullTrHtml(nullfullrows,spacenums,mark) {
+  mark.trs += '<tr>';
+  for(var j=0;j<(cols-spacenums);j++) {
+    mark.count =(nullfullrows-1)*cols+j;
+    mark.trs += '<td>'+(mark.count+1)+'</td>';
+  }
+  for (var j=0;j<spacenums;j++)
+    mark.trs += '<td style="color:#fff">0</td>';
+  mark.trs += '</trs>';
+}
+
+</script>
+{% endblock %}
+
+<!-- add exercise mark click function -->
+{% block exerciseextras %}
+  <script type="text/javascript">
+  $(function(){
+    markingBind();
+  });
+
+  function markingBind() {
+    // for judge - add onclick listener 
+    {% if exercises|exercisesByType:1|length %}
+    bindClickToExerciseMarking('judge');
+    {% endif %}
+    // for single - add onclick listener 
+    {% if exercises|exercisesByType:2|length %}
+    bindClickToExerciseMarking('single');
+    {% endif %}
+    // for statement - add onchange function 
+    {% if exercises|exercisesByType:3|length %}
+    bindChangeToExerciseMarking('statement');
+    {% endif %}
+  }
+  </script>
+{% endblock %}
+
+
+
+

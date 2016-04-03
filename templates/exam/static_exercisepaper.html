@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="This is my page">
+	<!-- 最新 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap.min.css">
+	<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+	<link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/docs.css">
+	<style type="text/css">
+		body {
+			font-family: "Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei UI","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+		}
+
+		.container {
+			width: 870px;
+		}
+
+		#exercisepaper_name {
+			text-align: center;
+		}
+		.container {
+			margin-top: -40px;
+		}
+		#exercisepaper_info div {
+			margin: 0 auto;
+			text-align: center;
+		}
+		#exercisepaper_info span {
+			font-size: 15px;
+			padding-left: 20px;
+			text-align: center;
+		}
+		.exercise-title {
+			margin-top: 30px;
+			margin-top: 30px;
+			
+		}
+		.exercise-title div {
+			font-size: 14px;
+		}
+		.well {
+			background-image:none;
+			background-color: #fff;
+			margin-top: 25px;
+		}
+		.well .exercise .exercise_title {
+			font-size: 14px;
+            padding-left: 10px;
+            border-left: 3px solid #eed3d7;
+            background-color: #fdf7f7;
+		}
+		.well .exercise .exercise_item p{
+			margin-top: 10px;
+		}
+		.well .exercise .exercise_item p label{
+			vertical-align: middle;
+			font-weight: none;
+			margin-left: 10px;
+		}
+		#scrollUp {
+			bottom: 20px;
+			right: 20px;
+			height: 38px;
+			width: 38px;
+			background: url("{{ STATIC_URL }}image/top.png") no-repeat;
+		}
+
+        .answer_span {
+            padding-left: 10px;
+            font-size: 12px;
+            vertical-align: middle;
+            line-height: 20px;
+        }
+
+        .resolution_span {
+            padding-left: 10px;
+            font-size: 12px;
+            vertical-align: middle;
+            line-height: 20px;
+        }
+
+        .exercise_answer {
+            margin-top: 15px;
+        }
+        .alert-info {
+            background-image:none;
+        }
+        .statement-content {
+            margin-top: 15px;
+        }
+        .exercise_score {
+            
+        }
+	</style>
+
+	<script src="{{STATIC_URL}}js/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+    {% block otherstyle %}{% endblock %}
+    {% block otherscript %}{% endblock %}
+</head>
+<body>
+{% load exam_extras %}
+{% block content %}
+{% set exercises = exercisepaper.exercisepaperdetails.all %}
+{% set count = 1 %}
+<div class="container">
+
+	<div class="page-header">
+      <h2 id="exercisepaper_name">{{ exercisepaper.exercisepaper_name }}</h2>
+    </div>
+    <div id="exercisepaper_info">
+    	<div>
+	    	<span>题目总数:{{ exercisepaper.exercise_exercisecount }}</span>
+	    	<span>试卷总分:{{ exercisepaper.exercisepaper_allscore }}</span>
+	    	<span>通过分数:{{ exercisepaper.exercisepaper_passedscore }}</span><br /><br />
+	    </div>
+    	<div>
+	    	<span>考试时长:{{ exercisepaper.exercisepaper_lasttime }}</span>
+	    	<span>考试开始时间:{{ exercisepaper.exercise_starttime.date|simpletimeformat:'-' }}</span>
+	    	<span>考试截止时间:{{ exercisepaper.exercise_endtime.date|simpletimeformat:'-' }}</span>
+    	</div>
+    </div>
+
+    {% block exercisepaper_status %}
+    {% endblock %}
+
+    {% block exercisepaper_result %}
+    {% endblock %}
+
+    <!-- judge -->
+    {% block judge %}
+    <div id="judge">
+        {% if exercises|exercisesByType:1|length %}
+        <div class="exercise-title alert alert-info " >
+            <div>判断题（本题型共有
+                {{ exercises|exercisesByType:1|length }}题，共{{exercises|exercisesByType:1|exerciseScore:1 }}分）</div>
+        </div>
+        {% for exercise in exercises|exercisesByType:1 %}
+        <!-- judge exercise -->
+        <div class="well">
+        	<div class="exercise">
+                
+        		<div class="exercise_title">
+        			{{ count }}、{{ exercise.exercise_title }} ( )
+                    
+        		</div>
+        		<div class="exercise_item">
+        			<p><input type="radio" id="{{exercise.id}}" name="judge_item{{count}}" value="A"/>
+                        <label>A  {{ exercise.exercise_itema }}</label></p>
+        			<p><input type="radio" id="{{exercise.id}}" name="judge_item{{count}}" value="B"/>
+                        <label>B  {{ exercise.exercise_itemb }}</label></p>
+        		</div>
+
+        	</div>
+        </div>
+        {% ++ count %}
+
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endblock %}<!-- judge-end -->
+    <!-- single-->
+    {% block single %}
+    {% set count = 1 %}
+    <div id="single">
+        {% if exercises|exercisesByType:2|length %}
+        <div class="exercise-title alert alert-info " >
+            <div>单选题（本题型共有 {{ exercises|exercisesByType:2|length }}题，共
+                {{exercises|exercisesByType:2|exerciseScore:2 }}分）</div>
+        </div>
+
+        {% for exercise in exercises|exercisesByType:2 %}
+        <!-- single exercise -->
+        <div class="well">
+            <div class="exercise">
+                <div class="exercise_title">
+                    {{ count }}、{{ exercise.exercise_title }} ( )
+                </div>
+                <div class="exercise_item">
+                    <p><input type="radio" id="{{exercise.id}}" name="single_item{{count}}" value="A"/>
+                        <label>A  {{ exercise.exercise_itema }}</label></p>
+                    <p><input type="radio" id="{{exercise.id}}" name="single_item{{count}}" value="B"/>
+                        <label>B  {{ exercise.exercise_itemb }}</label></p>
+                    <p><input type="radio" id="{{exercise.id}}" name="single_item{{count}}" value="C"/>
+                        <label>C  {{ exercise.exercise_itemc }}</label></p>
+                    <p><input type="radio" id="{{exercise.id}}" name="single_item{{count}}" value="D"/>
+                        <label>D  {{ exercise.exercise_itemd }}</label></p>
+
+                </div>
+            </div>
+            {% ++ count %}
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endblock %}<!-- single-end -->
+
+    <!-- statement -->
+    {% block statement %}
+    {% set count = 1 %}
+    <div id="statement">
+        {% if exercises|exercisesByType:3|length %}
+        <div class="exercise-title alert alert-info " >
+            <div>陈述题（本题型共有{{ exercises|exercisesByType:3|length }}题，共
+                 {{exercises|exercisesByType:3|exerciseScore:3 }}分）</div>
+        </div>
+        <!-- statement exercise -->
+        {% for exercise in exercises|exercisesByType:3 %}
+        <div class="well">
+            <div class="exercise">
+                <div class="exercise_title">
+                    {{ count }}、{{ exercise.exercise_title }} ( )
+                    
+                </div>
+                <div class="statement-content">
+                    <textarea id="{{exercise.id}}" name="statement_item{{count}}" 
+                    class="form-control" rows="5" placeholder="填写陈述观点"></textarea>
+                </div>
+               
+            </div>
+        </div>
+        {% ++ count %}
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% endblock %}<!-- statement-end -->
+
+  
+
+    <!-- for online test timing -->
+    {% block timimg %}
+    {% endblock %}
+
+    <!-- remind done exercises or some undone exercises -->
+    {% block exercisetip %}
+    {% endblock %}
+
+    <!-- like save temporary or submit exercisepaper
+    {% block right_operation %}
+    {% endblock %}
+    -->
+
+    <!-- add extra exercise info -->
+    {% block exerciseextras %}
+    {% endblock %}
+
+    <!-- add extra exercise score info -->
+    {% block exercisescores %}
+    {% endblock %}
+
+    {% block bottom_operation %}
+    {% endblock %}
+
+    <a id="scrollUp" href="#top" title="" style="position: fixed; z-index: 2147483647; display: block;"></a>
+</div>
+{% endblock %}
+</body>
+</html>

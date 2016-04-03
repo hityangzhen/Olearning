@@ -1,0 +1,35 @@
+{% extends "main/bootstrap.html" %}
+
+{% block title %}在线练习结束{% endblock %}
+
+{% block otherstyle %}
+<style type="text/css">
+	.alert-warning {
+        background-image:none;
+    }
+</style>
+{% endblock %}
+
+{% block otherscript %}
+{% endblock %}
+
+{% block content %}
+{% load learn_extras %}
+<div class="container">
+	<div class="alert alert-warning">
+		<strong>本次练习结束，请等待教师批阅结果</strong>
+	</div>
+	<p id="autodirect">5秒后自动关闭</p>
+</div>
+<script type="text/javascript">
+	$(function(){
+		// 
+		setTimeout(function(){
+	        window.opener=null;
+	        window.open('','_self');
+			window.close();
+	    },5000);
+	})
+	
+</script>
+{% endblock %}

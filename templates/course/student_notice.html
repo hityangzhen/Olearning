@@ -1,0 +1,94 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程公告管理{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/datagrid-detailview.js"></script>
+	<script type="text/javascript">
+		var u=window.location.href;
+		function noticeTitleFormatter(value,row,index) {
+			return row.fields.coursenotice_title;
+		}
+
+		function noticeTimeFormatter(value,row,index) {
+			return row.fields.coursenotice_time.split('T')[0];
+		}
+
+		function teacherNameFormatter(value,row,index) {
+			return row.fields.teacher;
+		}
+
+		function noticeStatusFormatter(value,row,index) {
+			value=row.fields.coursenotice_status ?'可用' : '不可用';
+		    return '<span style="color:orange; font-weight:bold;">'+value+'</span>';
+		}
+
+		$(function(){
+
+		    $.extend($.messager.defaults,{  
+		        ok:"确定",  
+		        cancel:"取消"  
+		    }); 
+
+			var dg=$('#dg');
+			var contents='<font style="color: #0E2D5F;font-size:14px;font-weight;bolder;font-family:微软雅黑;">公告内容：</font>';
+			contents += '<hr style="border: 1px solid #fff;"/>';
+
+			dg.datagrid({
+				url:u+'list/',
+		        view: detailview,
+		        onLoadSuccess:function(data){
+		            if(data.rows.length==0) {
+		                bottomCenter('<font style="color:red;font-size:13px;font-family:微软雅黑;">当前没有课程公告信息</font>');
+		            }
+		        },
+		        detailFormatter:function(index,row){
+		            return '<div class="ddv" style="padding:5px 60px 10px 20px;background-color: rgb(224, 236, 255);"></div>';
+		        },
+		        onExpandRow: function(index,row){
+		            var ddv = $(this).datagrid('getRowDetail',index).find('div.ddv');
+		            ddv.panel({
+		                height:100,
+		                border:false,
+		                cache:false,
+		                content:contents+'<p style="word-wrap:break-word;font-size:14px">'+row.fields.coursenotice_content+'</p>'
+		           	});
+		            $('#dg').datagrid('fixDetailRowHeight',index);
+		        }
+		    });
+
+		    defaultPagination(dg);
+
+
+
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<table id="dg" title="课程公告列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'pk',width:50">编号</th>
+			<th data-options="field:'notice_title',width:300" formatter="noticeTitleFormatter">标题</th>
+			<th data-options="field:'notice_time',width:200" formatter="noticeTimeFormatter">发布时间</th>
+			<th data-options="field:'teacher_name',width:200" formatter="teacherNameFormatter">发布人</th>
+			<th data-options="field:'notice_status',width:200" formatter="noticeStatusFormatter">状态</th>
+		</tr>
+	</thead>
+</table>
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}帮助页面{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+		.fontStyle1{font-weight: bolder;color: #0E2D5F;font-family:微软雅黑;font-size:20px;}
+		.fontStyle2{font-weight: bolder;color: #8F5700;font-family:微软雅黑;font-size:16px;}
+		.fontStyle3{font-weight: bolder;color: #0E2D5F;font-family:微软雅黑;font-size:14px;}
+	</style>
+{% endblock %}
+
+{% block otherscript %}{% endblock %}
+
+{% block content %}
+		<div style="margin-left: 8%;width:80%;">
+			<h1 align="center"
+				style="font-weight: bolder; color: #0E2D5F; font-family: 微软雅黑; font-size: 18px;">
+				常见问题解决方法
+			</h1>
+			<div class="demo-info">
+				<div class="demo-tip icon-tip"></div>
+				<div
+					style="font-weight: bolder; color: #8F5700; font-family: 微软雅黑; font-size: 14px;">
+					登录帐号/密码忘记怎么办？
+				</div>
+			</div>
+			<div class="fontStyle3" style="padding: 10px">
+				建议您立即联系管理员找回账号或密码
+				<br />
+				<font style="float: right">管理员常用电话：028-80688888，邮箱：1234567@qq.com</font>
+			</div>
+			<div style="height: 16px"></div>
+
+			<div class="demo-info">
+				<div class="demo-tip icon-tip"></div>
+				<div
+					style="font-weight: bolder; color: #8F5700; font-family: 微软雅黑; font-size: 14px;">
+					可以修改登录帐号吗？
+				</div>
+			</div>
+			<div class="fontStyle3" style="padding: 10px">
+				登录用户名和密码都是管理员或中心指定的，不可以更改，但是您可以更改其他信息，如：手机号码、常用邮箱、家庭住址等，具体更改步骤：
+				<br />
+				&nbsp;&nbsp;左边侧边栏用户信息更改->更改用户个人信息->保存，如果页面提示更新成功，表示您的基本信息已经更改。
+			</div>
+			<div style="height: 16px"></div>
+
+			<div class="demo-info">
+				<div class="demo-tip icon-tip"></div>
+				<div
+					style="font-weight: bolder; color: #8F5700; font-family: 微软雅黑; font-size: 14px;">
+					浏览器打开页面样式错乱/部分页面没有加载完全
+				</div>
+			</div>
+			<div class="fontStyle3" style="padding: 10px">
+				建议您尝试更换其他浏览器或者清理一下浏览器缓存或者ctrl+F5强制刷新页面看看（清理缓存的操作步骤：点击浏览器上方【工具】，选择【Internet选项】，
+				删除cookies
+				和删除文件）。清理缓存、垃圾文件后还是不可进入，请提供您的操作系统，浏览器版本，网络环境（网通电信教育网）和您的所在地以及问题页面截图，
+				以便我们尽快查找原因，并解决您的问题。
+			</div>
+
+			<div class="demo-info">
+				<div class="demo-tip icon-tip"></div>
+				<div
+					style="font-weight: bolder; color: #8F5700; font-family: 微软雅黑; font-size: 14px;">
+					操作过程中出现”网络出错“提示代表什么意思？
+				</div>
+			</div>
+			<div class="fontStyle3" style="padding: 10px">
+				网络出错代表您的请求未生效，首先检测您当前的网络是否畅通，能不能打开其他网页，如：百度、新浪主页，如果能够打开，则表明是系统请求处理错误，建议您立即联系管理员
+			</div>
+			<div style="height: 16px"></div>
+		</div>
+{% endblock %}

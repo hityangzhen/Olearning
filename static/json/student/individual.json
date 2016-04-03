@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "text": "学生个人信息查看",
+        "attributes":{ 
+            "url":"/admin/student/"
+        } 
+    },
+    {
+        "id": 2,
+        "text": "学生个人信息修改",
+        "attributes":{ 
+            "url":"/admin/student/showupdate/"
+        } 
+    }
+]

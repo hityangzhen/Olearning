@@ -1,0 +1,183 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程练习添加{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+		#exercisepaper{
+			border: 1px #8db2e3 solid;
+			background-color: #e0ecff;
+			height:150px;
+			margin-top: 20px;
+			font-size: 12px;
+			font-weight: bold;
+			color: #0E2D5F;
+		}
+		#exercisepaper p{
+			margin-left: 10px;
+			font-size: 14px;
+		}
+		.validatebox-style {
+			width:250px;border:1px solid #8db2e3;
+		}
+		.textarea-style {
+			width:360px;border:1px solid #8db2e3;
+			height:80px;
+		}
+		#exercisepaper table {
+			margin-left: 30px;
+			margin-bottom: 20px;
+		}
+		.easyui-linkbutton {
+			margin-left: 20px;
+		}
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/datagrid-detailview.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/exam/exercisepaper_add.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="easyui-layout" style="left:0;height:340px;">
+	<!-- exercise list -->
+    <div data-options="region:'west'" style="width:530px;">
+    	<table id="dg"  title="可用习题列表" style="left:0;height:337px;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			border:false,
+			">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+					<th data-options="field:'exercise_title',width:246" 
+					formatter="exerciseTitleFormatter">习题标题</th>
+					<th data-options="field:'exercisetype',width:100" formatter="exerciseTypeFormatter">习题类型</th>
+					<th data-options="field:'exercise_correctitem',width:100" 
+					formatter="exerciseCorrectItemFormatter">正确答案</th>
+				</tr>
+			</thead>
+		</table>
+    </div>
+
+    <div data-options="region:'center',border:false" style="margin-left:5px;">
+    	<a href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" title="添加习题" data-options="plain:true,iconCls:'icon-redo'" 
+    	onclick="addExerciseToPaper()" style="margin-top:160px;margin-left:8px"></a>
+    </div>
+
+    <!-- added exercise -->
+    <div data-options="region:'east'" style="width:510px;">
+    	<table id="addDg"  class="easyui-datagrid" title="练习习题列表" style="left:0;height:337px;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			border:false,
+			toolbar:'#toolbar' 
+			">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+					<th data-options="field:'exercise_title',width:250" 
+					formatter="exerciseTitleFormatter">习题标题</th>
+					<th data-options="field:'exercisetype',width:100" formatter="exerciseTypeFormatter">习题类型</th>
+				</tr>
+			</thead>
+		</table>
+    </div>
+</div>
+<!--工具栏-->
+<div id="toolbar">
+	<a id="tool_delete_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" 
+	iconCls="icon-remove"plain="true" title="删除习题" onclick="deleteAddedExercise()">删除习题</a>
+</div>
+
+<div id="exercisepaper">
+	<p>练习卷基本信息</p>
+	{% load exam_extras %}
+	<form id="form1" method="post" action="">
+		{% csrf_token %}
+		<table>
+			<tr>
+				<td>试卷名称：</td>
+				<td>
+					<input type="text" class="easyui-validatebox validatebox-style" id="exercisepaper_name" name="exercisepaper_name" data-options="required:true,missingMessage:'试卷名称不能为空'" 
+					value="{{ exercisepaper.exercisepaper_name }}"/>
+				</td>
+				<td>试卷总分：</td>
+				<td>
+					<input type="text" readonly="readonly" class="easyui-validatebox validatebox-style" id="exercisepaper_allscore" name="exercisepaper_allscore" 
+					value="{{ exercisepaper.exercisepaper_allscore }}"/>
+				</td>
+				<td>通过分数：</td>
+				<td>
+					<input type="text" class="easyui-numberbox validatebox-style" id="exercisepaper_passedscore" name="exercisepaper_passedscore" data-options="required:true,missingMessage:'通过分数不能为空'" 
+					value="{{ exercisepaper.exercisepaper_passedscore }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>考试时长：</td>
+				<td>
+					<input type="text" class="easyui-numberbox validatebox-style" id="exercisepaper_lasttime" name="exercisepaper_lasttime" data-options="required:true,missingMessage:'考试时长不能为空'" 
+					value="{{ exercisepaper.exercisepaper_lasttime }}" />
+				</td>
+				<td>考试开始时间：</td>
+				<td>
+					<input type="text" class="easyui-datebox validatebox-style" id="exercise_starttime" name="exercise_starttime" data-options="required:true,missingMessage:'考试开始时间不能为空'" 
+					{% if exercisepaper %}
+					value="{{ exercisepaper.exercise_starttime.date|timeformat:'/' }}"
+					{% endif %}
+					/>
+				</td>
+				<td>考试截止时间：</td>
+				<td>
+					<input type="text" class="easyui-datebox validatebox-style" id="exercise_endtime" name="exercise_endtime" data-options="required:true,missingMessage:'考试截止时间不能为空'"
+					{% if exercisepaper %}
+					value="{{ exercisepaper.exercise_endtime.date|timeformat:'/' }}"
+					{% endif %}
+
+					/>
+				</td>
+			</tr>
+			<tr>
+				<td>试卷状态：</td>
+				<td>
+					<select id="exercise_status" class="easyui-combobox validatebox-style" name="exercise_status" data-options="required:true">
+						<option value="True">可用</option>
+						<option value="False">不可用</option>
+					</select>
+				</td>
+				<td>题目总数：</td>
+				<td>
+					<input type="text" readonly="readonly" class="easyui-validatebox validatebox-style" id="exercise_exercisecount" name="exercise_exercisecount" 
+					value="{{ exercisepaper.exercise_exercisecount }}"/>
+				</td>
+				<td>可参加次数：</td>
+				<td>
+					<input type="text" class="easyui-numberbox validatebox-style" id="exercise_examtimes" name="exercise_examtimes" data-options="required:true,missingMessage:'可参加次数不能为空'"
+					value="{{ exercisepaper.exercise_examtimes }}"/>
+				</td>
+			</tr>
+			<input type="hidden" id="addedExerciseIdSet" name="addedExerciseIdSet" />
+			<input type="hidden" id="publish" name="publish" value="0"/>
+			<tr height="20px"></tr>
+		</table>
+		<span style="width:200px;margin-left:400px;margin-top:20px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="exercisePaperAdd()">保存</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="exercisePaperAddAndPublish()">
+				发布</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="">取消</a>
+		</span>
+	</form>
+</div>
+
+{% endblock %}

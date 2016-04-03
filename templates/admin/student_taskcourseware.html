@@ -1,0 +1,89 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课件学习详细信息{% endblock %}
+
+{% block otherstyle %}
+{% endblock %}
+
+{% block otherscript %}
+<script type="text/javascript">
+var u=window.location.href;
+var array=u.split('/');
+var taskid=array[array.length-3];
+var courseid=array[array.length-2];
+
+function coursewareNameFormatter(value,row,index) {
+	return row.fields.resource.fields.resource_name;
+}
+
+function learnProgressFormatter(value,row,index) {
+
+	value=row.fields.learn_rate;
+	var rel='<div style="width:100%;height:15px;background-color:#FBEC88;margin-bottom:10px;color:red">';
+	rel += '<p style="width:'+value+'%;height:15px;background-color:#ccc;text-align:center;">'+value+'%</p>';
+	rel += '</div>';
+	return rel;
+}
+
+function learnTimeSumFormatter(value,row,index) {
+	return timeFormat(row.fields.learn_timelength);
+}
+
+function coursewareIsPassed(value,row,index) {
+	switch(row.fields.learn_status) {
+		case 0:
+			value='未学';
+			break;
+		case 1:
+			value='正在学习';
+			break;
+		case 2:
+			value='已通过';
+			break;
+	}
+
+	return '<span style="color:orange; font-weight:bold;">'+value+'</span>';
+}
+
+function learnCourseware(value,row,index) {
+	return '<a style="color:blue" target="_blank" href="/learn/view/'+taskid+'/'+courseid+'/'+row.fields.resource.pk+'/">课件学习</a>';
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " 
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+<div style="height:10px;"></div>
+<table id="dg"  title="课件学习详细信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' 
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'courseware_name',width:250" 
+			formatter="coursewareNameFormatter">课件名称</th>
+			<th data-options="field:'learn_progress',width:320" formatter="learnProgressFormatter">学习进度</th>
+			<th data-options="field:'learn_timesum',width:150"  formatter="learnTimeSumFormatter">学习时间</th>
+			<th data-options="field:'courseware_ispassed',width:150" formatter="coursewareIsPassed">课程状态</th>
+			<th data-options="field:'learn_courseware',width:150" formatter="learnCourseware">学习课件</th>
+		</tr>
+	</thead>
+</table>
+<script type="text/javascript">
+	$(function(){
+		var dg=$('#dg');
+		dg.datagrid({
+			url:'/admin/task/student_taskcourseware/'+taskid+'/'+courseid+'/'
+		});
+		defaultPagination(dg);
+	})
+</script>
+{% endblock %}

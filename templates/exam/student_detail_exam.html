@@ -1,0 +1,82 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}学员已参加练习详细信息列表{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript">
+	var u=window.location.href;
+
+	function examStarttimeFormatter(value,row,index) {
+		return row.fields.exam_starttime.replace(/[TZ]/g,' ');
+	}
+
+	function examScoreFormatter(value,row,index) {
+		if(row.fields.exam_markingstatus)
+			return '<span style="color:red;font-weight:bolder">'+row.fields.exam_scores+'</span>';
+		else
+			return '';
+	}
+
+	function examIsMarkingFormatter(value,row,index) {
+		return '<span style="color:orange;font-weight:bolder">'+(row.fields.exam_markingstatus?'已批改':'未批改')+'</span>';
+	}
+	function examIsPassedFormatter(value,row,index) {
+		if(row.fields.exam_markingstatus) 
+			return '<span style="color:orange;font-weight:bolder">'+(row.fields.exam_ispassed?'通过':'未通过')+'</span>';
+		else
+			return '';
+	}
+	function examResultViewFormatter(value,row,index) {
+		if(row.fields.exam_markingstatus)
+			return '<a target="_blank" href="/exam/student/exam/result/'+row.pk+'/">查看结果</a>';
+		else
+			return '<span style="color:blue">请等待教师审阅</span>';
+	}
+
+	function examTimeLength(value,row,index) {
+		return timeFormat(value);
+	}
+
+	$(function(){
+		var dg=$('#dg');
+		dg.datagrid({
+			url:u+'list/'
+		});
+
+		defaultPagination(dg);
+	});
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " style="margin-bottom:10px;"
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+<table id="dg" title="学员已参加练习详细信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'exam_starttime',width:200" formatter="examStarttimeFormatter">练习开始时间</th>
+			<th data-options="field:'exam_timelength',width:200" formatter="examTimeLength">答卷时间</th>
+			<th data-options="field:'exam_score',width:150" formatter="examScoreFormatter">得分</th>
+			<th data-options="field:'exam_ismarking',width:150" formatter="examIsMarkingFormatter">是否批改</th>
+			<th data-options="field:'exam_ispassed',width:150" formatter="examIsPassedFormatter">是否通过</th>
+			<th data-options="field:'exam_resultview',width:150" formatter="examResultViewFormatter">查看练习卷</th>
+		</tr>
+	</thead>
+</table>
+{% endblock %}
+
+
+

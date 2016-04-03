@@ -1,0 +1,13 @@
+{% extends "error_base.html" %}
+{% load i18n %}
+
+{% block title %}ERROR-500{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger">Server Error Information</div>
+<div class="bs-callout bs-callout-danger" style="height:80%;">
+    <h4 >Error 500</h4>
+    <h4 >Developer Debug Info</h4>
+    <p style="word-wrap:break-word; word-break:normal;">{{ stackinfo }}</p>
+</div>
+{% endblock %}

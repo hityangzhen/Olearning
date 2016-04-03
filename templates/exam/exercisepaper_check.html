@@ -1,0 +1,139 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}练习审核信息列表{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/datagrid-groupview.js"></script>
+	<script type="text/javascript">
+
+		var u=window.location.href;
+
+		function exercisepaperNameFormatter(value,row,index) {
+			return row.fields.exercisepaper_name;
+		}
+
+		function exerciseExerciseCountFormatter(value,row,index) {
+			return row.fields.exercise_exercisecount;
+		}
+
+		function exerciseExamTimesFormatter(value,row,index) {
+			return row.fields.exercise_examtimes;
+		}
+
+		function exercisepaperAllScoreFormatter(value,row,index) {
+			return row.fields.exercisepaper_allscore;
+		}
+
+		function exercisepaperPassedscoreFormatter(value,row,index) {
+			return row.fields.exercisepaper_passedscore;
+		}
+		function exercisepaperLasttimeFormatter(value,row,index) {
+			return row.fields.exercisepaper_lasttime+'分钟';
+		}
+
+		function exerciseStarttimeFormatter(value,row,index) {
+			return row.fields.exercise_starttime.split('T')[0];
+		}
+
+		function exerciseEndtimeFormatter(value,row,index) {
+			return row.fields.exercise_endtime.split('T')[0];
+		}
+		function exerciseIscheckedFormatter(value,row,index) {
+			var value='';
+			var ischecked=row.fields.exercise_ischecked;
+			if (ischecked==0) {
+				value='审核通过';
+				return '<a href="javascript:void(0)" onclick="exercisePaperCheck('+row.pk+')"  style="color:blue; font-weight:bold;">'+value+'</a>';
+			}
+
+				
+			else if(ischecked==1)
+				value='审核通过';
+			else
+				value='审核不通过';
+			
+		    return '<span style="color:orange; font-weight:bold;">'+value+'</span>';
+		}
+
+		function exercisePaperPreviewFormatter(value,row,index) {
+			return '<a style="color:blue" target="_blank" href="/exam/exercisepaperpreview/'+row.pk+'/">练习预览</a>';
+		}
+
+		function exerciseStatusFormatter(value,row,index) {
+
+			var value=row.fields.exercise_status ?'可用' : '不可用';
+		    return '<span style="color:orange; font-weight:bold;">'+value+'</span>';
+		}
+
+		function exercisePaperCheck(id) {
+			var title='信息反馈';
+			$.ajax({
+				type:'GET',
+				url:'/exam/admin_exercisepaper/check/'+id+'/',
+				dataType:'json',
+				success:function(data) {
+					$.messager.alert(title,data.tip,function(){
+						$('#dg').datagrid('reload');
+					});
+				},
+				error:function(XMLHttpRequest,txtStatus,errorThrown){
+                    $.messager.alert(title,"网络出错"+txtStatus+","+errorThrown,'warning',function (){
+                        $('#dg').datagrid('reload'); 
+                    });
+                }
+			});
+		}
+
+		$(function(){
+			var dg=$('#dg');
+			dg.datagrid({
+				url:'/exam/admin_exercisepaper/check/list/',
+				onLoadSuccess:function(data){
+		            
+		        }
+			});
+
+			defaultPagination(dg);
+		})
+		
+	</script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+
+<table id="dg"  title="练习审核信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar',
+			view:groupview,
+            groupField:'course',
+            groupFormatter:function(value,rows){
+            	return value + ' - 练习卷（'+ rows.length +'）';
+            }
+			">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'exercisepaper_name',width:250" formatter="exercisepaperNameFormatter">试卷名称</th>
+			<th data-options="field:'exercise_exercisecount',width:70" formatter="exerciseExerciseCountFormatter">题目总数</th>
+			<th data-options="field:'exercise_examtimes',width:70" formatter="exerciseExamTimesFormatter">可参加次数</th>
+			<th data-options="field:'exercisepaper_allscore',width:70" formatter="exercisepaperAllScoreFormatter">试卷总分</th>
+			<th data-options="field:'exercisepaper_passedscore',width:70" formatter="exercisepaperPassedscoreFormatter">通过分数</th>
+			<th data-options="field:'exercisepaper_lasttime',width:76" formatter="exercisepaperLasttimeFormatter">考试时长</th>
+			<th data-options="field:'exercise_starttime',width:100" formatter="exerciseStarttimeFormatter">考试开始时间</th>
+			<th data-options="field:'exercise_endtime',width:100" formatter="exerciseEndtimeFormatter">考试截止时间</th>
+			<th data-options="field:'exercise_status',width:80" formatter="exerciseStatusFormatter">试卷状态</th>
+			<th data-options="field:'exercise_ischecked',width:80" formatter="exerciseIscheckedFormatter">是否审核</th>
+			<th data-options="field:'exercise_preview',width:80" formatter="exercisePaperPreviewFormatter">预览</th>
+		</tr>
+	</thead>
+</table>
+{% endblock %}

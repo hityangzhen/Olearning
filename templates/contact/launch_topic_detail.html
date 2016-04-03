@@ -1,0 +1,220 @@
+{% extends "contact/launch_topic.html" %}
+
+{% block title %}课程话题详细信息{% endblock %}
+
+{% block childstyle %}
+	<style type="text/css">
+    .box-heading {
+      margin-top: 20px;
+      border-bottom: 1px solid #DDD;
+      margin-bottom: 15px;
+      zoom: 1;
+    }
+    .box-heading h2 {
+      margin: 0;
+      font-size: 18px;
+      display: inline-block;
+      border-bottom: 4px solid #5bb75b;
+      line-height: 28px;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-bottom: -1px;
+    }
+    .topic-title {
+      background-color: #f8f8f8;
+      padding:  10px 5px 10px 5px;
+      height:40px;
+      border-bottom: 1px solid #DDD;
+      border-top: 1px solid #DDD;
+    }
+    .media img {
+      width:100px;
+      height:100px;
+    }
+    .media .pull-left {
+      margin-right: 40px ! important;
+    }
+
+    .pull-left p{
+      width: 100px;
+      margin-bottom: 0px;
+      text-align: center;
+      word-wrap:break-word;
+    }
+    .operation {
+      margin-bottom: 20px;
+    }
+    .reply {
+      margin-bottom: 30px;
+    }
+    textarea:required:invalid{
+       border-color: #953b39;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+    }
+    /* 有效 */
+    textarea:required:valid{
+       none;
+    }
+
+    blockquote {
+      padding: 10px 20px 10px 50px;
+      margin-bottom: 10px;
+      margin-right: 20px;
+      color: #888;
+      border-color: #bce8f1;
+      background: #f4f8fa url({{STATIC_URL}}image/left_quote.png) 10px 10px no-repeat;
+    }
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+  <script type="text/javascript">
+
+    $(function(){
+      $('#courseid').val('{{topic.course.id}}');
+    });
+
+  </script>
+{% endblock %}
+
+{% block status %}
+{% endblock %}
+
+{% block path %}
+  <ol class="breadcrumb">
+    <li><a href="/contact/launch_topic/{{topic.course.id}}/list/">话题区首页</a></li>
+    <li class="active">{{topic.topic_title}}</li>
+  </ol>
+{% endblock %}
+
+{% block operation %}
+<div class="operation">
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#topic">
+      <span class="glyphicon glyphicon-plus"></span> 发表话题</button>
+
+    <button type="button" class="btn btn-warning" onclick="replyOrReference(1,{{firstReply.id}},1)">
+      <span class="glyphicon glyphicon-share-alt"></span> 回 复</button>
+</div>
+{% endblock %}
+
+{% load exam_extras %}
+{% load contact_extras %}
+
+
+{% block main %}
+{% set level = 1 %}
+
+{% for tr in topicReply %}
+
+<div class="reply">
+  <p class="topic-title">
+    <span style="float:left">{{ tr.topicreply_title }}</span>
+    <span style="float:right">发表于:&nbsp;&nbsp;&nbsp;&nbsp;{{ tr.topicreply_time|fulltimeformat }}
+    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: orange;font-weight:bolder">{{ level }}</span>#</span>
+  </p>
+
+  <div class="media">
+    <div class="pull-left" href="#">
+      <img class="media-object" src="{{STATIC_URL}}image/anonymous.jpg" alt="...">
+      <p>{{ tr.topicreply_userid|replyername:tr.topicreply_usertype }}</p>
+      <p>
+        <button type="button" class="btn btn-primary btn-xs" onclick="replyOrReference(1,{{tr.id}},{{level}})">
+       回 复</button>
+
+        <button type="button" class="btn btn-primary btn-xs" onclick="replyOrReference(0,{{tr.id}},{{level}})">
+        引 用</button>
+      </p>
+      <p style="margin-top:10px">
+        {% if topic.topic_userid == request.session.user.id and topic.topic_usertype == request.session.user.usertype and tr.topicreply_replyid == 0 %}
+          {# topic owner can delete the topic #}
+           <button type="button" class="btn btn-danger btn-xs" onclick="deleteTopic({{topic.id}})">
+            <span class="glyphicon glyphicon-remove"></span> 删 除 话 题  </button>
+
+        {% endif %}
+
+      </p>
+    </div>
+    <div class="media-body">
+      {% if tr.topicreply_isreply == 0 %}
+      <blockquote>
+        <a href="#"  >@{{ tr.topicreply_replyid|replyername2 }}</a>: 
+        {{ tr.topicreply_referencecontent|topicshield:tr.topicreply_replyid|safe }}</blockquote>
+      {% endif %}
+      <p>{{ tr.topicreply_content|topicshield:tr.id|safe|default:'<span style="color: #999">无内容<span>' }}</p>
+    </div>
+  </div>
+</div>
+{% ++ level %}
+
+{% endfor %}
+
+<div style="float:right">
+<span  style="float: right;">记录总数 : <b> {{ topicReply|length }}</b> </span>
+</div>
+
+<!-- answer modal -->
+<div class="modal fade" id="reply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="">回复/引用 话题</h4>
+      </div>
+      <form id="form2" method="post" action="/contact/launch_topic/{{topic.id}}/reply/">
+        {% csrf_token %}
+        <div class="modal-body">
+          <!--
+          <div class="row">
+            <div class="col-sm-2">
+              <span style="color:red">*</span>标 题：
+            </div>
+            <div class="col-sm-10">
+              <input type="text" id="topicreply_title" name="topicreply_title" placeholder="请输入标题"
+               class="form-control"  required="required"
+              oninvalid="setCustomValidity('必须填写！');" />
+            </div>
+          </div>
+          -->
+          <div class="row">
+            <div class="col-sm-2">
+              内容：
+            </div>
+            <div class="col-sm-10">
+              <textarea rows="5" id="topicreply_content" name="topicreply_content" 
+              placeholder="输入回答内容"
+              class="form-control" required="required" oninvalid="setCustomValidity('必须填写！');"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <input type="hidden" id="topicreply_isreply" name="topicreply_isreply" />
+        <input type="hidden" id="level" name="level" />
+        <input type="hidden" id="replyid" name="replyid" />
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" >提 交</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        </div>
+       </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+  <script type="text/javascript">
+  function  replyOrReference(type,replyid,level) {
+    $('#topicreply_isreply').val(type);
+    $('#level').val(level);
+    $('#replyid').val(replyid);
+    $('#reply').modal('show');
+  }
+
+  function deleteTopic(id) {
+    if(confirm('确定要删除此话题吗')) {
+      window.location.href='/contact/launch_topic/delete/'+id+'/' ;
+    }
+  }
+
+  </script>
+
+{% endblock %}

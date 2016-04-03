@@ -1,0 +1,38 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程信息审核{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/course/course_check.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/datagrid-groupview.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<table id="dg" title="课程信息审核列表" style="left:0;position:relative;height:440px;"
+    data-options="
+    iconCls: 'icon-group',
+    singleSelect:true,
+    rownumbers:true,
+    fitColumns:true,
+    view:groupview,
+    groupField:'model',
+    toolbar:'#toolbar',
+    loadMsg:'数据装载中......',
+    groupFormatter:function(value,rows){
+    	return value.split('#')[1];
+    }">
+    <thead>
+        <tr>
+           	<th data-options="field:'fields',width:200" formatter="courseNameFormatter">课程名称</th>
+			<th data-options="field:'course_tags',width:100" formatter="courseTagsFormatter">课程标签</th>
+			<th data-options="field:'course_credit',width:60" formatter="courseCreditFormatter">课程学分</th>
+			<th data-options="field:'coursetype',width:100" formatter="courseTypeNameFormatter">课程类型</th>
+			<th data-options="field:'course_status',width:60" formatter="courseStatusFormatter">课程状态</th>
+			<th data-options="field:'course_detail',width:80" formatter="courseOperationFormatter">操作</th>
+        </tr>
+    </thead>
+</table>
+{% endblock %}

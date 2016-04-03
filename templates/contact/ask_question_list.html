@@ -1,0 +1,64 @@
+{% extends "contact/ask_question.html" %}
+
+{% block title %}课程疑问信息{% endblock %}
+
+{% block childstyle %}
+	<style type="text/css">
+	table {
+		margin-top: 30px;
+		font-size: 14px;
+	}
+	table thead {
+		text-align: center;
+		background-color: #f8f8f8;
+	}
+	.pagination {
+		float: right;
+	}
+	</style>
+{% endblock %}
+
+{% block status %}
+{% endblock %}
+
+{% block operation %}
+<div class="operation">
+    {% if request.session.user.usertype == 0 %}
+   	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#question">
+      <span class="glyphicon glyphicon-plus"></span> 我要提问</button>
+    {% endif %}
+	  <button type="button" class="btn btn-success" onclick=""><span class="glyphicon glyphicon-cog"></span> 全部问题</button>
+	  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-pushpin"></span> 常见问题</button>
+</div>
+{% endblock %}
+
+{% load exam_extras %}
+{% load contact_extras %}
+
+{% block main %}
+<table class="table table-condensed table-hover">
+    <thead>
+          <tr>
+            <th>题目</th>
+            <th>回答/查看</th>
+            <th>提问人</th>
+            <th>最后回答</th>
+          </tr>
+    </thead>
+    <tbody>
+        {% for q in qList %}
+          <tr>
+            <td width="55%"><a href="/contact/ask_question/detail/{{q.id}}/">{{q.question_title}}</a></td>
+            <td width="10%">{{ q|answernums }} / {{q.question_viewtimes}}</td>
+            <td width="10%">{{q.student.student_username}}</td>
+            <td width="20%"><font color="#428bca"> {{ q|answerlastname }} </font><br />
+              {{ q|answerlasttime|fulltimeformat }}</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+	<span  style="margin-right: 10px; float: right">记录总数 :<b> {{ qList|length }}</b></span>
+</div>
+{% endblock %}

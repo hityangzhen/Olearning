@@ -1,0 +1,49 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程习题管理{% endblock %}
+
+{% block otherstyle %}{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/datagrid-detailview.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/exam/exercise.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="margin:2px 0;"></div>
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " style="margin-bottom:20px;"
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+
+<table id="dg"  title="课程习题信息列表" style="left:0;height:450px;position:relative;"
+			data-options="
+			iconCls: 'icon-group',
+			rownumbers:true,
+			singleSelect:false,
+			method:'get',
+			pagination:true,
+			loadMsg:'数据装载中......',
+			toolbar:'#toolbar' ">
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true,width:50">全选</th>
+			<th data-options="field:'pk',width:100">习题编号</th>
+			<th data-options="field:'exercise_title',width:450" formatter="exerciseTitleFormatter">习题标题</th>
+			<th data-options="field:'exercisetype',width:150" formatter="exerciseTypeFormatter">习题类型</th>
+			<th data-options="field:'exercise_correctitem',width:150" 
+			formatter="exerciseCorrectItemFormatter">正确答案</th>
+			<th data-options="field:'exercise_status',width:150" formatter="exerciseStatusFormatter">习题状态</th>
+		</tr>
+	</thead>
+</table>
+
+<!--工具栏-->
+<div id="toolbar" style="padding:5px;height:auto">
+	<a id="tool_add_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-add" plain="true" title="添加习题">
+	</a>
+	<a id="tool_edit_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-edit"
+	plain="true" title="编辑习题" onclick="exerciseUpdate()"></a>
+	<a id="tool_delete_link" href="javascript:void(0)" class="easyui-linkbutton easyui-tooltip" iconCls="icon-remove"
+	plain="true" title="删除习题" onclick=""></a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}添加课程信息{% endblock %}
+
+{% block otherstyle %}
+	<style type="text/css">
+		.validatebox-style {
+			width:250px;border:1px solid #99aaff;
+		}
+		.textarea-style {
+			width:330px;border:1px solid #99aaff;
+			height:140px;
+		}
+		.tips{
+			color: #0E2D5F;
+			border: 1px #8db2e3 solid;
+			background-color: #e0ecff;
+			padding: 0px 5px;
+			width: 400px;
+		}
+		.tips h3{
+			color: red;
+		}
+	</style>
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/course/courseadd.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="easyui-layout" style="width:90%;height:100%;padding:20px" data-options="border:false">
+	<div data-options="region:'west',border:false" style="width:550px">
+		<form id="form1" method="post" enctype="multipart/form-data" action="/course/addinfo/">
+			{% csrf_token %}
+			<table style="font-size: 12px;font-weight: bold;color: #0E2D5F;width:500px;margin-left:50px;">
+				<tr>
+					<td width="15%">课程名称</td>
+					<td width="75%">
+						<input id="course_name" class="easyui-validatebox validatebox-style" type="text" name="course_name" data-options="required:true,missingMessage:'课程名称不能为空'" />
+					</td>
+				</tr>
+				<tr>
+					<td>课程标签</td>
+					<td>
+						<input id="course_tags" class="easyui-validatebox validatebox-style" type="text" name="course_tags" data-options="required:true,missingMessage:'课程标签不能为空以逗号相隔'" />
+					</td>
+				</tr>
+				<tr>
+					<td>课程学分</td>
+					<td>
+						<input id="course_credit" class="easyui-numberbox validatebox-style"  type="text" name="course_credit" data-options="required:true,missingMessage:'课程学分不能为空'" />
+					</td>
+				</tr>
+				<tr>
+					<td>课程对象</td>
+					<td>
+						<input id="course_learner" class="easyui-validatebox validatebox-style"  type="text" name="course_learner" />
+					</td>
+				</tr>
+				<tr>
+					<td>课程类型</td>
+					<td>
+						<select id="coursetype" class="easyui-combobox validatebox-style" name="coursetype" 
+						data-options="
+	                    method:'get',
+	                    panelHeight:'auto',
+	                    required:true,
+	                    missingMessage:'课程类型不能为空'">
+				        </select>
+					</td>
+				</tr>
+				<tr>
+					<td>课程图标</td>
+					<td>
+						<input id="course_icon" type="file" class="validatebox-style" name="course_icon">
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2">课程大纲</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<textarea id="course_outline" type="text" class="textarea-style easyui-validate" name="course_outline"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">课程简介</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<textarea id="course_description" type="text" class="textarea-style easyui-validate" name="course_description"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<span style="width:200px;margin-left:100px">
+							<a href="javascript:void(0)"  class="easyui-linkbutton" onclick="submitCourse()">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#form1').form('clear')">取消</a>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div data-options="region:'center',border:false" style="width:300px">
+		<div style="margin:2px 0;"></div>
+			<div class="tips">
+				<h3 >操作提示</h3>
+				<ul>
+					<li>填写课程基本信息，选择课程图标,点击保存</li>
+					<br />
+					<li>保存成功后会跳转至课件和课程资源添加页面</li>
+					<br />
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

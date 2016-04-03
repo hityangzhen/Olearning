@@ -1,0 +1,256 @@
+{% extends "admin/admin-base.html" %}
+
+{% block title %}课程习题编辑{% endblock %}
+
+{% block otherstyle %}
+
+	<style type="text/css">
+		.validatebox-style {
+			width:250px;border:1px solid #8db2e3;
+		}
+		.textarea-style {
+			width:360px;border:1px solid #8db2e3;
+			height:80px;
+		}
+		fieldset {
+			width:550px;
+			border:2px solid #99aaff;
+			border-bottom:0;
+			border-left:0;
+			border-right:0;
+			margin:0 auto;
+			margin-bottom: 20px;
+		}
+		fieldset legend {
+			color:#333333;
+			font-size:0.8em;
+			font-weight:bold;
+		}
+		#exercisetypeDiv {
+			font-weight: bold;
+			color: #0E2D5F;
+			width:400px;
+			margin:0 auto;
+		    font-size: 12px;
+		    margin-bottom: 30px;
+		}
+
+		table tr > td:first-child {
+			text-align: left;
+		}
+	</style>
+
+{% endblock %}
+
+{% block otherscript %}
+	<script type="text/javascript" src="{{STATIC_URL}}js/exam/exercise_add.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<a id="back" href="javascript:window.history.go(-1)" class="easyui-linkbutton " 
+data-options="plain:true,iconCls:'icon-undo'">返回</a>
+
+<div style="margin:2px"></div>
+<fieldset>
+    <legend >
+        添加习题
+    </legend>
+</fieldset>
+<div id="exercisetypeDiv">
+	<table style="font-size: 12px;font-weight: bold;color: #0E2D5F;">
+		<tr>
+			<td width="30%">选择习题类型：</td>
+			<td width="70%">
+				<select id="exercise_type" class="easyui-combobox validatebox-style" name="exercise_type" >
+				</select>
+			</td>
+		</tr>
+	</table>
+</div>
+<div style="width:550px;border-bottom: 1px dashed #99aaff;margin:0 auto;margin-bottom:40px;">
+
+</div>
+<div style="width:400px;margin:0 auto">
+
+	<!-- judge exercise -->
+	<form action="" method="post" id="judge" style="display:none">
+		{% csrf_token %}
+		<input id="exercisetype" name="exercisetype" type="hidden" value="1"/>
+		<table style="font-size: 12px;font-weight: bold;color: #0E2D5F;">
+			<tr>
+				<td width="30%">习题标题</td>
+				<td width="70%">
+					<input id="exercise_title" class="easyui-validatebox validatebox-style" type="text" name="exercise_title" data-options="required:true,missingMessage:'习题标题不能为空'" 
+					value="{{ exercise.exercise_title }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td width="30%">习题状态</td>
+				<td width="70%">
+					<select id="exercise_status" class="easyui-combobox validatebox-style" name="exercise_status">
+						<option value="True">可用</option>
+						<option value="False">不可用</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>正确答案</td>
+				<td>
+					<input id="exercise_correctitem" class="easyui-validatebox validatebox-style" type="text" name="exercise_correctitem" data-options="required:true,missingMessage:'正确答案为A(正确)，B(错误)中的一项'" value="{{ exercise.exercise_correctitem }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">习题解析</td>		
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea id="exercise_resolution" name="exercise_resolution" class="easyui-validatebox textarea-style">{{ exercise.exercise_resolution }}</textarea>
+				</td>
+			</tr>
+			<tr height="30px"></tr>
+		</table>
+		<span style="width:200px;margin-left:125px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="">取消</a>
+		</span>
+	</form>
+
+	<!-- single exercise -->
+	<form action="" method="post" id="single" style="display:none">
+		{% csrf_token %}
+		<input id="exercisetype" name="exercisetype" type="hidden" value="2"/>
+		<table style="font-size: 12px;font-weight: bold;color: #0E2D5F;">
+			<tr>
+				<td width="30%">习题标题</td>
+				<td width="70%">
+					<input id="exercise_title" class="easyui-validatebox validatebox-style" type="text" name="exercise_title" data-options="required:true,missingMessage:'习题标题不能为空'" 
+					value="{{ exercise.exercise_title }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>选项A</td>
+				<td>
+					<input id="exercise_itema" class="easyui-validatebox validatebox-style" type="text" name="exercise_itema" data-options="required:true,missingMessage:'习题选项不能为空'" 
+					value="{{ exercise.exercise_itema }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>选项B</td>
+				<td>
+					<input id="exercise_itemb" class="easyui-validatebox validatebox-style" type="text" name="exercise_itemb" data-options="required:true,missingMessage:'习题选项不能为空'" 
+					value="{{ exercise.exercise_itemb }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>选项C</td>
+				<td>
+					<input id="exercise_itemc" class="easyui-validatebox validatebox-style" type="text" name="exercise_itemc" data-options="required:true,missingMessage:'习题选项不能为空'" 
+					value="{{ exercise.exercise_itemc }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>选项D</td>
+				<td>
+					<input id="exercise_itemd" class="easyui-validatebox validatebox-style" type="text" name="exercise_itemd" data-options="required:true,missingMessage:'习题选项不能为空'" 
+					value="{{ exercise.exercise_itemd }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td width="30%">习题状态</td>
+				<td width="70%">
+					<select id="exercise_status" class="easyui-combobox validatebox-style" name="exercise_status">
+						<option value="True">可用</option>
+						<option value="False">不可用</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>正确答案</td>
+				<td>
+					<input id="exercise_correctitem" class="easyui-validatebox validatebox-style" type="text" name="exercise_correctitem" data-options="required:true,missingMessage:'正确答案为A，B，C，D中的一项'" 
+					value="{{ exercise.exercise_correctitem }}"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">习题解析</td>		
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea id="exercise_resolution" name="exercise_resolution" class="easyui-validatebox textarea-style">{{ exercise.exercise_resolution }}</textarea>
+				</td>
+			</tr>
+			<tr height="30px"></tr>
+		</table>
+		<span style="width:200px;margin-left:125px;margin-top:20px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="">取消</a>
+		</span>
+	</form>
+
+	<!-- statement exercise -->
+	<form action="" method="post" id="statement" style="display:none">
+		{% csrf_token %}
+		<input id="exercisetype" name="exercisetype" type="hidden" value="3"/>
+		<table style="font-size: 12px;font-weight: bold;color: #0E2D5F;">
+			<tr>
+				<td width="30%">习题标题</td>
+				<td width="70%">
+					<input id="exercise_title" class="easyui-validatebox validatebox-style" type="text" name="exercise_title" data-options="required:true,missingMessage:'习题标题不能为空'" 
+					value="{{ exercise.exercise_title }}" />
+				</td>
+			</tr>
+			<tr>
+				<td width="30%">习题状态</td>
+				<td width="70%">
+					<select id="exercise_status" class="easyui-combobox validatebox-style" name="exercise_status">
+						<option value="True">可用</option>
+						<option value="False">不可用</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">习题解析</td>		
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea id="exercise_resolution" name="exercise_resolution" class="easyui-validatebox textarea-style">{{ exercise.exercise_resolution }}</textarea>
+				</td>
+			</tr>
+			<tr height="30px"></tr>
+		</table>
+		<span style="width:200px;margin-left:125px;">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="">保存</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="">取消</a>
+		</span>
+	</form>
+
+
+</div>
+{% if exercise %}
+	<script type="text/javascript">
+		var exercisetype={{ exercise.exercisetype.id }};
+		var exercise_status='{{ exercise.exercise_status }}';
+		var form=['judge','single','statement'];
+		var exercise_id={{ exercise.id }};
+
+		$(function(){
+			// display the form
+			chooseExerciseType(exercisetype);
+			// select the combobox
+			$('#exercise_type').combobox('setValue',exercisetype);
+			$('#exercise_type').combobox('disable');
+
+			if (exercise_status=='True')
+				$('#exercise_status').combobox('setValue','True');
+			else if(exercise_status=='False')
+				$('#exercise_status').combobox('setValue','False');
+
+			// update exercise
+			update($('#'+form[exercisetype-1]),exercise_id);
+
+		});
+	</script>
+{% endif %}
+
+{% endblock %}

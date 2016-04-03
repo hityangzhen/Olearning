@@ -1,0 +1,198 @@
+
+body {
+	font-family: "ff-tisa-web-pro-1","ff-tisa-web-pro-2","Lucida Grande","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif;
+}
+.container {
+	width: 960px ! important;
+}
+
+.head {
+	height:89px;
+	background: -webkit-gradient(linear,center top,center bottom,from(#fff), to(#f2f2f2));
+}
+
+.head-main{
+	width:960px;
+	margin: 0 auto;
+	padding: 15px;
+}
+
+.head-main img {
+	width:260px;
+	height:55px;
+}
+
+.about {
+	height:20px;
+	float:right;
+	margin-top: 20px;
+}
+
+.head-main .about a {
+	float:right;
+	font-size: 18px;
+	color:#428bca;
+}
+
+.navbar {
+	height:40px ! important;
+	border-radius: 0px ! important;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
+}
+
+.navbar .container .collapse ul {
+	margin-left: -15px;
+}
+
+.navbar .container .collapse ul li a {
+	color:#fff;
+	border-left: 1px #f2f2f2 solid;
+	font-size: 14px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.navbar .container .collapse .navbar-right li a {
+	border-left: 1px transparent solid;
+}
+
+.navbar .container .collapse ul + ul {
+	margin-right: -35px;
+}
+
+.navbar .container .collapse ul li a:hover {
+	text-decoration: none;
+	background-color: transparent;
+}
+
+#slideleft {
+	border: #eee 3px solid;
+	border-radius: 4px;
+	margin-left: 15px;
+	padding: 15px;
+}
+
+.glyphicon-chevron-right {
+	right:10% ! important;
+}
+
+.glyphicon-chevron-left {
+	left:10% ! important;	
+}
+
+#slideright {
+	border: #eee 3px solid;
+	border-radius: 4px;
+	padding: -20px;
+	float: right;
+	margin-right: 15px;
+}
+form h4 {
+	border-bottom: transparent; 1px solid;
+	padding-bottom: 0px;
+	padding-top: 0px;
+}
+
+form label {
+	line-height: 32px;
+	color: #555;
+	font: 500 12px/1.8 'Hiragino Sans GB',Microsoft YaHei,sans-serif;
+	margin-left: 10px;
+}
+
+.form-control {
+	margin-left: 10px;
+	width:90%;
+	margin-bottom: 10px;
+}
+
+.btn-block {
+	width:90%;
+	margin-left: 5%;
+	font-size: 18px;
+}
+
+#slideright ul li + li {
+	float:right;
+	margin-right: -2px;
+}
+
+.nav-tabs > li.active > a {
+	border-top-color: transparent;
+}
+
+.nav-tabs > li > a {
+	border-radius: 0;
+}
+
+form input {
+	margin-bottom: 10px ! important;
+}
+
+form div {
+	height:20px;
+}
+
+#forgetpwd {
+	float:right;
+	line-height: 22px;
+	color: #555;
+	font: 500 12px/1.8 'Hiragino Sans GB',Microsoft YaHei,sans-serif;
+	margin-bottom: 20px;
+	margin-right: 10px;
+}
+
+.foot {
+	height: 40px;
+	background: #eeeeee;
+	clear: both;
+	text-align: right;
+	padding: 10px 13px 10px 17px;
+	width: 930px;
+	margin-top: 20px;
+	border-radius: 4px;
+}
+
+.foot a{
+	text-decoration: none;
+	float: left;
+	margin-right: 17px;
+}
+
+#adminlogin {
+	float: right;
+	font-size: 14px;
+	color: #333333;
+}
+/* form error ul */
+.errorlist {
+	list-style-type:none;
+	font-size: 12px;
+	color:red;
+}
+
+.errorlist li {
+	margin-left: -30px;
+}
+
+
+.modal-content {
+	width:350px;
+	height:330px;
+	margin: 0 auto;
+}
+
+.modal-header h4 {
+	text-align: center;
+}
+
+
+.modal-footer {
+	text-align: center;
+	margin-top: -10px;
+}
+
+.modal-body button {
+	margin-left: 10px;
+	margin-top: 10px;
+}
